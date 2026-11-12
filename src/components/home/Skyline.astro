@@ -2,6 +2,8 @@
 /*
  * Decorative riverside skyline for the home banner. It covers its positioned parent and crops
  * from the center, where the stupa, shrines, and reflection sit, so every screen shape keeps them.
+ * `sizes` is the drawn width, not the box width: `cover` draws wider than a tall box, and a file
+ * picked for the box would be enlarged.
  */
 import { Picture } from 'astro:assets';
 import skyline from '../../../assets/home/skyline.png';
@@ -11,7 +13,7 @@ import skyline from '../../../assets/home/skyline.png';
   src={skyline}
   alt=""
   widths={[640, 1024, skyline.width]}
-  sizes="(min-width: 80rem) 60vw, (min-width: 64rem) 50vw, 100vw"
+  sizes="(min-width: 80rem) 60vw, (min-width: 64rem) 60rem, 160vw"
   formats={['avif', 'webp']}
   fallbackFormat="jpg"
   priority

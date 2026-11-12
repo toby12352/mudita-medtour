@@ -34,13 +34,15 @@ Separate full-width bands with `bg-surface-muted` and `border-border` borders ra
 
 ## Home welcome banner
 
-The home page opens with a full-screen illustrated banner (`src/views/HomeView.astro`):
+The home page opens with an illustrated banner (`src/views/HomeView.astro`):
 
-- The section fills the first screen under the sticky header with `min-h-first-screen` (defined in `global.css` as `100svh` minus the 5.5rem + 1px header). `svh` keeps the bottom in view while mobile browser bars show. It is a minimum: longer translations make the banner taller instead of clipping.
+- Below `lg` the section fills the first screen under the sticky header with `min-h-first-screen` (defined in `global.css` as `100svh` minus the 5.5rem + 1px header). `svh` keeps the bottom in view while mobile browser bars show. It is a minimum: longer translations make the banner taller instead of clipping.
 - Below `lg` it is a column: the illustration fills the space left above a text panel (at least `min-h-48`, `sm:min-h-72`). From `lg` it is two columns with the panel at the inline start: equal halves on large tablets, 2:3 (`xl:grid-cols-5`) on desktops.
-- The text panel is `bg-secondary-50` with a `border-secondary` 4px bar against the picture (top below `lg`, inline end from `lg`) and the section's bottom edge. It holds the site name (`text-primary-700`), the `h1`, the lead paragraph, and the one primary button (full width below `sm`). Padding `py-8 sm:py-12 lg:py-16`, centered vertically.
+- From `lg` the banner is not full screen. An empty `lg:aspect-16/10` spacer in the picture column sets its height to the illustration's own shape (1585 × 992 is 16:10), so the whole picture shows uncropped and is never drawn larger than needed. Stretching it to the screen height made `cover` scale it by height, crop a third of it, and enlarge it up to 2x on Retina screens. If the text panel is taller, the row grows and the picture crops slightly at the sides. Use a spacer, not `aspect-ratio` on the grid item itself: a stretched item with a ratio widens past its track.
+- The text panel is `bg-secondary-50` with a `border-secondary` 4px bar against the picture (top below `lg`, inline end from `lg`) and the section's bottom edge. It holds the site name (`text-primary-700`), the `h1`, the lead paragraph, and the one primary button (full width below `sm`). Padding `py-8 sm:py-12`, centered vertically.
 - `Skyline` (`src/components/home/Skyline.astro`) renders `assets/home/skyline.png` with `<Picture>` (AVIF and WebP, JPEG fallback, `priority` because it is the LCP image) and `alt=""`. It covers its column with `object-cover object-center`: the stupa, shrines, and reflection are in the middle of the picture, so narrow screens lose only the outer towers.
-- The source is 1585 × 992 px. Replace it with a master at least 2560px wide (same composition, subject centered) to keep it sharp on large and high-density screens.
+- `sizes` describes the **drawn** width, not the column width: `(min-width: 80rem) 60vw, (min-width: 64rem) 60rem, 160vw`. With `cover`, a tall box draws the picture wider than the box, and a file chosen for the box width would be enlarged. Update `sizes` whenever the banner layout changes.
+- The source is 1585 × 992 px. Replace it with a master at least 2560px wide (same composition, subject centered) to keep it sharp on very large and high-density screens.
 
 Do not reuse the banner image on other pages, put text on the picture, add a scrim, or animate it.
 

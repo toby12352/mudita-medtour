@@ -2,6 +2,14 @@
 
 Record every top-layer design change here, newest first: the date, what changed, and why. See [README.md](README.md) for what counts as top-layer.
 
+## 2026-11-12: Shorter, sharper desktop banner
+
+- From `lg` the home banner's height follows the illustration's 16:10 shape (an empty `lg:aspect-16/10` spacer in the picture column) instead of the screen height. At 1440 × 900 it is 535px tall instead of 810, and the whole picture shows uncropped.
+- Why: filling the screen height made `object-fit: cover` scale the picture by height. Up to a third of it was cropped away, and it was drawn up to 2x larger than the file on Retina screens (1.63x at 1440 × 900). Now 1440 × 900 at 2x is 1.08x.
+- `sizes` now describes the drawn width (`(min-width: 80rem) 60vw, (min-width: 64rem) 60rem, 160vw`). The old column-width `sizes` made the browser download a file narrower than the drawn picture, so even normal screens enlarged it ([Image Load Lab](https://imageloadlab.com/object-fit-cover-wasted-bytes/)).
+- Phones and tablets keep the full-screen banner. Text panel padding at `lg` is now `py-12`, through the base `sm:py-12`.
+- `.cursor/rules/ui.mdc`: banner rule updated.
+
 ## 2026-11-12: Full-screen home banner
 
 - The home banner now fills the first screen below the header with a riverside Yangon skyline illustration (`assets/home/skyline.png`), replacing the small SVG drawing. Documented in [layout.md](layout.md#home-welcome-banner).

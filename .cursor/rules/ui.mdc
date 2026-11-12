@@ -57,7 +57,7 @@ Details: `docs/design/` (read the topic file you are changing).
 - Do not convey meaning by color alone. Sections with headings use `aria-labelledby`.
 
 ## Home banner illustration
-- `Skyline` (`src/components/home/Skyline.astro`) is home-only: the decorative `<Picture>` (`alt=""`, `priority`) that fills the first screen with `min-h-first-screen`. Text sits on the gold panel beside it (from `lg`) or below it, never on the picture. Details: `docs/design/layout.md#home-welcome-banner`.
+- `Skyline` (`src/components/home/Skyline.astro`) is home-only: the decorative `<Picture>` (`alt=""`, `priority`). Below `lg` the banner fills the first screen (`min-h-first-screen`); from `lg` its height follows the picture's 16:10 shape, never the screen height, so the image is not enlarged. Keep `sizes` equal to the drawn width. Text sits on the gold panel beside it (from `lg`) or below it, never on the picture. Details: `docs/design/layout.md#home-welcome-banner`.
 
 ## Home how-it-works
 - `HowItWorks` (`src/components/home/HowItWorks.astro`) is home-only: an `<ol>` of six steps, not cards or links. One column with a dashed rail below `lg`, two rows of three from `lg`; never six in one row. Copy lives under `home.steps.*`. Details: `docs/design/layout.md#home-how-it-works-section`.
