@@ -10,4 +10,5 @@ export interface NavItem {
 export const mainNavigation: NavItem[] = [
   { labelKey: 'nav.home', href: '/' },
   { labelKey: 'nav.articles', href: '/articles/' },
+  { labelKey: 'nav.contact', href: '/contact/' },
 ];

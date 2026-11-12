@@ -44,3 +44,4 @@ Plain language, "you", outcome first, explain terms on first use. No superlative
 - Every page uses `MainLayout` with `title` and `description`, taken from `src/i18n/ui.ts` or the article.
 - Page markup lives in a view in `src/views/`, rendered by an English route and a Myanmar route under `src/pages/my/`.
 - Treatment guides follow the section order in `docs/design/content.md`.
+- Phone, LINE, Viber, Messenger, and Facebook details live only in `contactChannels` in `src/lib/site.ts` (used by the contact page and footer). Do not hard-code numbers or profile URLs in views or components.

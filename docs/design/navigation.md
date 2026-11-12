@@ -9,7 +9,7 @@ Visitors should always know where they are, how they got there, and how to reach
 - Sticky at the top with a light translucent background and a bottom border.
 - The logo on the left links to the home page. See [Logo](#logo).
 - Main navigation items come from `mainNavigation` in `src/lib/navigation.ts`. Add sections there, never by hard-coding links in the header. Each item has an unprefixed `href` and a `labelKey` from `src/i18n/ui.ts`; the header localizes both.
-- Keep top-level items few (about five or fewer) and order them by importance to patients.
+- Keep top-level items few (about five or fewer) and order them by importance to patients. Current items: Home, Articles, Contact.
 - The current section is marked with `aria-current="page"` and styled `aria-[current=page]:text-accent`.
 
 ## Mobile menu
@@ -56,8 +56,8 @@ Long guides (roughly five or more `h2` sections) get an "On this page" list of j
 A single slim `bg-primary-700` bar with white text. It does not repeat the logo or the main navigation; the sticky header carries both.
 
 - **Copyright** at the inline start: `© {year} {site.name}` in `text-sm`.
-- **Social links** at the inline end, behind a light `border-s` divider from `sm`: Line, Viber, Messenger, Facebook, in that order and no others. They come from `socialLinks` in `src/lib/site.ts`; replace the placeholder `#` hrefs there, not in the component.
-- Each social link is an icon-only `size-11` link with a translated `sr-only` name (`footer.*` in `src/i18n/ui.ts`) and an `aria-hidden` inline SVG (Simple Icons, CC0). The list has a translated `aria-label`.
+- **Social links** at the inline end, behind a light `border-s` divider from `sm`: Line, Viber, Messenger, Facebook, in that order and no others. They come from `socialLinks` in `src/lib/site.ts`, which takes each `href` from `contactChannels`, so the footer and the [contact page](content.md#contact-page) always share the same URLs. Edit the details there, not in the component.
+- Each social link is an icon-only `size-11` link with a translated `sr-only` name (`footer.*` in `src/i18n/ui.ts`) and an `aria-hidden` icon from `BrandIcon` (`src/components/common/BrandIcon.astro`, Simple Icons, CC0). The list has a translated `aria-label`.
 - Icons are white and turn gold (`hover:text-secondary`, 6.2:1 on primary) on hover. Accent is too close to primary to show on this bar, so the footer links override the focus outline color to white (`focus-visible:outline-white`); the outline itself stays.
 - Below `sm`, the copyright sits on its own line and the icons move to the next line, aligned to the end.
 - Will hold legal and trust links when they exist: medical disclaimer, editorial policy, privacy, accessibility statement, and contact details with a physical address. Keep them in the same bar style.

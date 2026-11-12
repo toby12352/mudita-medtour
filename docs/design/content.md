@@ -36,6 +36,17 @@ Add these as the site grows. Each one should be visible, not buried:
 - **Organization details:** registered name, physical address, and contact details in the footer. The footer currently holds only the copyright line and social links; add these when they exist.
 - **Policies:** medical disclaimer, editorial policy, privacy, and accessibility statement, linked from the footer (not there yet).
 
+## Contact page
+
+`/contact/` and `/my/contact/` (`src/views/ContactView.astro`) list the ways to reach the team. There is no form and no backend.
+
+- Reading-width `Container`, `py-12 sm:py-16`: the `h1`, one lead sentence, then a single-column `<ul>` with a translated `aria-label`.
+- Order: Phone, LINE, Viber, Messenger, Facebook. Each item is one link covering the whole row (it has no other control): a `size-11` `bg-surface-muted` tile with a `BrandIcon` in `text-primary-700`, the channel name, the number or account name, and a verb ("Call", "Chat on LINE"). Below `sm` the verb is `sr-only` and only a chevron shows. Rows are `rounded-card border border-border`, turning `bg-surface-muted` with an accent name on hover.
+- Links open the app directly: `tel:` for phone, `line.me/R/ti/p/@id`, `viber://chat?number=`, `m.me/`, and the Facebook page URL. Same tab, so the phone can hand the link to the app.
+- Brand icons stay in the site palette, not each app's brand color. No primary button, floating chat widget, or sticky bar (see [principles.md](principles.md)).
+- Numbers, account names, and URLs live in `contactChannels` in `src/lib/site.ts`; the footer social icons read the same list. Replace `value` and `href` together. LINE needs an official account ID (`@...`), not a phone number.
+- Add a "what happens next" note (who replies, how, and how soon) once response times can be promised.
+
 ## Treatment guide template (future)
 
 When treatment pages are built, each follows this order so visitors can scan any guide the same way:

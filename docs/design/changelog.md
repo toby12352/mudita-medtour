@@ -2,6 +2,21 @@
 
 Record every top-layer design change here, newest first: the date, what changed, and why. See [README.md](README.md) for what counts as top-layer.
 
+## 2026-11-13: Home banner slogan
+
+- The home welcome panel now opens with the slogan "ကျန်းမာစွာအသက်ကြီးပါ" (`site.slogan` in `src/lib/site.ts`) instead of the site name, which the header logo already shows. Documented in [layout.md](layout.md#home-welcome-banner).
+- Burmese on both locales by choice, marked `lang="my"` so the Myanmar font and heading-safe leading apply on English pages too. Not a translation key.
+- Shown once, on the first screen. Not repeated beside the logo (no taglines there), in the footer, or on other pages, so it stays noticeable rather than becoming page chrome.
+- `.cursor/rules/ui.mdc`: banner rule updated.
+
+## 2026-11-13: Contact page
+
+- New bilingual contact page at `/contact/` and `/my/contact/`, with Contact as the third main navigation item. Documented in [content.md](content.md#contact-page).
+- No form: a single-column list of links that open the phone dialer, LINE, Viber, Messenger, or Facebook. Each row is one tappable link with an icon tile, the channel name, the number or account, and a verb. Bing's contact-page results and Bumrungrad's contact page informed the layout. Floating chat widgets and a row of loud buttons were rejected under principles 2 and 5.
+- New shared component `BrandIcon` (`src/components/common/BrandIcon.astro`): the Simple Icons paths moved out of the footer, plus a phone outline. Footer and contact page both use it.
+- Contact details live in `contactChannels` in `src/lib/site.ts`, as placeholders until the real numbers and accounts are supplied. Footer `socialLinks` read their URLs from it.
+- `.cursor/rules/content.mdc`: contact details are edited only in `site.ts`.
+
 ## 2026-11-12: Shorter, sharper desktop banner
 
 - From `lg` the home banner's height follows the illustration's 16:10 shape (an empty `lg:aspect-16/10` spacer in the picture column) instead of the screen height. At 1440 × 900 it is 535px tall instead of 810, and the whole picture shows uncropped.

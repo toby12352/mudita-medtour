@@ -1,0 +1,65 @@
+---
+import BrandIcon from '../components/common/BrandIcon.astro';
+import Container from '../components/ui/Container.astro';
+import { getLocale, useTranslations, type UiKey } from '../i18n/ui';
+import MainLayout from '../layouts/MainLayout.astro';
+import { contactChannels, type ContactChannelId } from '../lib/site';
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const channelCopy: Record<ContactChannelId, { name: UiKey; action: UiKey }> = {
+  phone: { name: 'contact.phone', action: 'contact.phoneAction' },
+  line: { name: 'contact.line', action: 'contact.lineAction' },
+  viber: { name: 'contact.viber', action: 'contact.viberAction' },
+  messenger: { name: 'contact.messenger', action: 'contact.messengerAction' },
+  facebook: { name: 'contact.facebook', action: 'contact.facebookAction' },
+};
+---
+
+<MainLayout title={t('contact.title')} description={t('contact.description')}>
+  <Container width="reading" class="py-12 sm:py-16">
+    <h1>{t('contact.title')}</h1>
+    <p class="text-ink-muted mt-4 text-lg">{t('contact.lead')}</p>
+
+    <ul aria-label={t('contact.channels')} class="mt-10 flex flex-col gap-4">
+      {
+        contactChannels.map((channel) => (
+          <li>
+            <a
+              href={channel.href}
+              class="group rounded-card border-border bg-surface hover:bg-surface-muted flex items-center gap-4 border p-4 sm:p-5"
+            >
+              <span class="rounded-control bg-surface-muted text-primary-700 group-hover:bg-surface inline-flex size-11 shrink-0 items-center justify-center">
+                <BrandIcon name={channel.id} class="size-6" />
+              </span>
+              <span class="flex min-w-0 flex-1 flex-col">
+                <span class="text-ink group-hover:text-accent font-semibold">
+                  {t(channelCopy[channel.id].name)}
+                </span>
+                <span class="text-ink-muted break-words" dir="ltr" translate="no">
+                  {channel.value}
+                </span>
+              </span>
+              <span class="text-primary-700 group-hover:text-accent inline-flex shrink-0 items-center gap-1 font-medium">
+                <span class="sr-only sm:not-sr-only">{t(channelCopy[channel.id].action)}</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                  class="size-4 rtl:-scale-x-100"
+                >
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Container>
+</MainLayout>

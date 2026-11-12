@@ -23,6 +23,7 @@ const en = {
     'Information for international patients about medical treatments, hospitals, specialists, and planning care abroad.',
   'nav.home': 'Home',
   'nav.articles': 'Articles',
+  'nav.contact': 'Contact',
   'nav.main': 'Main',
   'nav.menu': 'Menu',
   'nav.language': 'Language',
@@ -58,6 +59,21 @@ const en = {
   'articles.empty': 'No articles have been published yet.',
   'article.published': 'Published',
   'article.updated': 'Updated',
+  'contact.title': 'Contact us',
+  'contact.description':
+    'Call or message Mudita Medtour by phone, LINE, Viber, Messenger, or Facebook.',
+  'contact.lead': 'Choose the way that suits you. Tap an option to open it on your phone.',
+  'contact.channels': 'Ways to contact us',
+  'contact.phone': 'Phone',
+  'contact.phoneAction': 'Call',
+  'contact.line': 'LINE',
+  'contact.lineAction': 'Chat on LINE',
+  'contact.viber': 'Viber',
+  'contact.viberAction': 'Chat on Viber',
+  'contact.messenger': 'Messenger',
+  'contact.messengerAction': 'Send a message',
+  'contact.facebook': 'Facebook',
+  'contact.facebookAction': 'Open Facebook',
 } as const;
 
 export type UiKey = keyof typeof en;
@@ -67,6 +83,7 @@ const my: Record<UiKey, string> = {
     'နိုင်ငံတကာ လူနာများအတွက် ဆေးကုသမှုများ၊ ဆေးရုံများ၊ အထူးကုဆရာဝန်များနှင့် နိုင်ငံခြားတွင် ဆေးကုသမှု စီစဉ်ခြင်းဆိုင်ရာ အချက်အလက်များ။',
   'nav.home': 'ပင်မစာမျက်နှာ',
   'nav.articles': 'ဆောင်းပါးများ',
+  'nav.contact': 'ဆက်သွယ်ရန်',
   'nav.main': 'ပင်မလမ်းညွှန်',
   'nav.menu': 'မီနူး',
   'nav.language': 'ဘာသာစကား',
@@ -106,6 +123,22 @@ const my: Record<UiKey, string> = {
   'articles.empty': 'ထုတ်ဝေထားသော ဆောင်းပါး မရှိသေးပါ။',
   'article.published': 'ထုတ်ဝေသည့်ရက်',
   'article.updated': 'ပြင်ဆင်သည့်ရက်',
+  'contact.title': 'ကျွန်ုပ်တို့ကို ဆက်သွယ်ရန်',
+  'contact.description':
+    'Mudita Medtour ကို ဖုန်း၊ LINE၊ Viber၊ Messenger သို့မဟုတ် Facebook မှတစ်ဆင့် ဖုန်းခေါ်နိုင် သို့မဟုတ် မက်ဆေ့ချ် ပို့နိုင်ပါသည်။',
+  'contact.lead':
+    'သင့်အတွက် အဆင်ပြေသော နည်းလမ်းကို ရွေးချယ်ပါ။ နှိပ်လိုက်သည်နှင့် သင့်ဖုန်းတွင် ဖွင့်ပေးပါမည်။',
+  'contact.channels': 'ဆက်သွယ်နိုင်သော နည်းလမ်းများ',
+  'contact.phone': 'ဖုန်း',
+  'contact.phoneAction': 'ဖုန်းခေါ်ရန်',
+  'contact.line': 'LINE',
+  'contact.lineAction': 'LINE တွင် စကားပြောရန်',
+  'contact.viber': 'Viber',
+  'contact.viberAction': 'Viber တွင် စကားပြောရန်',
+  'contact.messenger': 'Messenger',
+  'contact.messengerAction': 'မက်ဆေ့ချ် ပို့ရန်',
+  'contact.facebook': 'Facebook',
+  'contact.facebookAction': 'Facebook စာမျက်နှာ ဖွင့်ရန်',
 };
 
 export const ui: Record<Locale, Record<UiKey, string>> = { en, my };

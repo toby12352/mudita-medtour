@@ -21,6 +21,7 @@ There is no fallback: a Myanmar URL never shows English content. Missing transla
 | Articles                                                        | `src/content/articles/en/<slug>.md` and `src/content/articles/my/<slug>.md` |
 | Page markup                                                     | A shared view in `src/views/`, rendered by one route file per locale        |
 | Brand name                                                      | `site.name` in `src/lib/site.ts`, the same in both languages                |
+| Slogan                                                          | `site.slogan` in `src/lib/site.ts`, Burmese in both languages (`lang="my"`) |
 
 Never hard-code visible text in a component or page; add a key to `ui` instead. `my` is typed against the English keys, so a missing Myanmar string fails `npm run check`.
 
