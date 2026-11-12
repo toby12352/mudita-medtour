@@ -1,0 +1,46 @@
+---
+description: Article and page content structure, frontmatter, and trust requirements
+globs: src/content/**/*,src/pages/**/*.astro,src/views/**/*.astro
+alwaysApply: false
+---
+
+# Content conventions
+
+Details: `docs/design/content.md`.
+
+## Article files
+Every article is a pair with the same file name: `src/content/articles/en/<slug>.md` and `src/content/articles/my/<slug>.md`. Write both in the same task; see `.cursor/rules/i18n.mdc`. Slugs are English Latin letters.
+
+## Article frontmatter
+Validated by `src/content.config.ts`; the build fails on invalid data. Both files of a pair use the same `pubDate`, `updatedDate`, and `draft`; `title` and `description` are translated.
+```yaml
+---
+title: 'Hip replacement abroad: costs, recovery, and risks' # quote titles containing a colon
+description: One or two plain-language sentences for listings and search results.
+pubDate: 2026-11-12
+updatedDate: 2026-12-01 # set when content is materially revised
+draft: false
+---
+```
+Adding or renaming a frontmatter field is top-layer: update the schema, `docs/design/content.md`, and the changelog.
+
+## Article body
+- Never use `#` in the body; the title renders as the `h1`. Use `##` for sections, `###` for subsections, in order.
+- Open with a short summary answering the main question.
+- Short paragraphs; lists for steps, symptoms, options.
+- End clinical content with `## Sources` (primary sources) and a note that it is general information, not medical advice.
+- No inline HTML classes or styles in Markdown. New elements go in `.prose-content` or an MDX component.
+
+## Voice
+Plain language, "you", outcome first, explain terms on first use. No superlatives without evidence, no promised outcomes. Same rules in Myanmar.
+
+## Trust details on pages
+- Show published and updated dates.
+- Prices: range, currency, date checked, inclusions and exclusions.
+- Accreditation: name the body and link to verification.
+- Inquiry points: a short numbered "what happens next" list.
+
+## Pages
+- Every page uses `MainLayout` with `title` and `description`, taken from `src/i18n/ui.ts` or the article.
+- Page markup lives in a view in `src/views/`, rendered by an English route and a Myanmar route under `src/pages/my/`.
+- Treatment guides follow the section order in `docs/design/content.md`.

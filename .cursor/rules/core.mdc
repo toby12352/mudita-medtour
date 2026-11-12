@@ -1,0 +1,37 @@
+---
+description: Project essentials and the rule that design docs and rules move with top-layer changes
+alwaysApply: true
+---
+
+# Medical tourism site: core
+
+Static information site for international patients. Astro 7 (SSG), TypeScript strict, Tailwind CSS 4, Markdown/MDX content collections, Netlify. No backend.
+
+## Stack
+- Pages, layouts, and content UI are `.astro` components. React `.tsx` only for interactive islands with a `client:*` directive.
+- Every page uses `MainLayout`. Routes are files in `src/pages/`. Nav items live in `src/lib/navigation.ts`.
+- Bilingual, English and Myanmar: every page, UI string, and article is created in both languages (`.cursor/rules/i18n.mdc`).
+- Style with Tailwind classes and the tokens in the `@theme` block of `src/styles/global.css`.
+- Do not invent colors, font sizes, breakpoints, button variants, or new shared components when an existing one fits.
+
+## Design guidelines
+`docs/design/` holds the design rules. Before changing UI, styles, or page templates, read `docs/design/README.md` and only the topic file you need (typography, color, buttons, navigation, cards, layout, content, languages). Do not read the whole folder.
+
+## Top-layer changes keep docs in sync
+A change is top-layer if later pages are expected to copy it:
+- The `@theme` block, `base` layer, or `.prose-content` in `src/styles/global.css`
+- Props or visual behavior of `Button`, `Container`, `Header`, `Footer`, `ArticleCard`, `MainLayout`
+- The navigation model in `src/lib/navigation.ts`
+- Locales, URL scheme, or translation structure (`src/i18n/ui.ts`, `astro.config.mjs` `i18n`)
+- A new shared component, breakpoint rule, or page/content template
+
+In the same task, before reporting done:
+1. Update the matching `docs/design/*.md` file.
+2. Update `.cursor/rules/*.mdc` if a do or don't changed.
+3. Add a dated entry to `docs/design/changelog.md`.
+4. If it contradicts `docs/design/principles.md`, say so to the user and update it deliberately.
+
+Not top-layer: article copy, one-off sections built from existing components, bugfixes restoring documented behavior.
+
+## Verify
+Run `npm run check` and `npm run lint` after code changes.

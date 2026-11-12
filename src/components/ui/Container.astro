@@ -1,0 +1,16 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'div'> & {
+  as?: 'div' | 'section' | 'article' | 'header' | 'footer' | 'nav';
+  width?: 'page' | 'reading';
+};
+
+const { as: Tag = 'div', width = 'page', class: className, ...attrs } = Astro.props;
+
+const widthClass = width === 'reading' ? 'max-w-reading' : 'max-w-page';
+---
+
+<Tag class:list={['mx-auto w-full px-4 sm:px-6 lg:px-8', widthClass, className]} {...attrs}>
+  <slot />
+</Tag>

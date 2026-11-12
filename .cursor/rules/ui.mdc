@@ -1,0 +1,66 @@
+---
+description: UI conventions for Astro, React, and CSS files (tokens, buttons, cards, layout, accessibility)
+globs: src/**/*.astro,src/**/*.tsx,src/styles/**/*.css
+alwaysApply: false
+---
+
+# UI conventions
+
+Details: `docs/design/` (read the topic file you are changing).
+
+## Tokens
+- Color by role: `bg-surface`, `bg-surface-muted`, `text-ink`, `text-ink-muted`, `border-border`, `bg-primary-700`, `text-primary-700`, `hover:text-accent`, `hover:bg-accent`.
+- Accent (crimson) only for hover, focus, and current state. Secondary gold (`bg-secondary-50/100`, `border-secondary`) only as a background behind dark text or a decorative bar; never text, outlines, or buttons.
+- Radius `rounded-control` (controls) and `rounded-card` (cards). Shadow `shadow-card` only on cards.
+- No hex, `rgb()`, arbitrary values (`bg-[#...]`, `text-[17px]`), or raw palette colors (`bg-blue-600`, `text-gray-500`).
+
+## Typography
+- Use `h1`-`h3` elements and their base styles; do not restyle per page. One `h1` per page, no skipped levels.
+- Body text at least `text-base`; `text-sm` only for metadata.
+- Long text in `<Container width="reading">`; article bodies in `.prose-content`.
+
+## Layout
+- Use `Container` for width and padding, never hand-written `mx-auto max-w-* px-*`.
+- Mobile first; Tailwind default breakpoints only. Sections `py-16`, grids `gap-6`.
+- Prefer logical utilities: `ms-`/`me-`, `ps-`/`pe-`, `start-`/`end-`, `text-start`, `border-s`.
+- No fixed heights on text; no horizontal scroll at 320px.
+
+## Buttons and links
+```astro
+<!-- Good: action -->
+<Button type="submit">Send inquiry</Button>
+<!-- Good: moving between content pages -->
+<a href="/articles/" class="text-primary-700 hover:text-accent font-medium">Read articles</a>
+<!-- Bad: button styling for ordinary content navigation -->
+<Button href="/articles/" variant="secondary">View all</Button>
+```
+- At most one `variant="primary"` per view. Labels start with a verb.
+- `Button href` only when a link is the view's single main action. The home welcome banner's "Read articles" is the current case; see `docs/design/buttons.md`.
+- Only `primary` and `secondary` variants exist; do not add one-off button styles.
+
+## Cards
+- Cards only on listing and hub pages, inside `<ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">`.
+- The heading link is the only control. No wrapping `<a>` around the card, no `after:absolute after:inset-0` overlay.
+- Pass the correct `headingLevel` for the page outline.
+
+## Logo
+- Only in the header (and the favicon/share image via `Seo`), not the footer, from `assets/logo/logo.jpg` with `<Image>`; alt is `site.name`. Details: `docs/design/navigation.md#logo`.
+- No text wordmark, tagline, rating, or trust badge beside it. Do not crop, recolor, or stretch it, or use it as a hero.
+
+## Footer
+- One slim `bg-primary-700` bar: copyright at the start, then Line, Viber, Messenger, Facebook icon links from `socialLinks` in `src/lib/site.ts`. No logo, no repeated navigation, no other networks.
+- Icon links are `size-11` with `sr-only` names; white, `hover:text-secondary`, `focus-visible:outline-white`. Details: `docs/design/navigation.md#footer`.
+
+## Accessibility
+- WCAG 2.2 AA contrast; never remove the global `:focus-visible` outline.
+- Touch targets at least 44px (`size-11` for icon buttons); icon-only controls need `sr-only` text.
+- Do not convey meaning by color alone. Sections with headings use `aria-labelledby`.
+
+## Home banner illustration
+- `Skyline` (`src/components/home/Skyline.astro`) is home-only: the decorative `<Picture>` (`alt=""`, `priority`) that fills the first screen with `min-h-first-screen`. Text sits on the gold panel beside it (from `lg`) or below it, never on the picture. Details: `docs/design/layout.md#home-welcome-banner`.
+
+## Home how-it-works
+- `HowItWorks` (`src/components/home/HowItWorks.astro`) is home-only: an `<ol>` of six steps, not cards or links. One column with a dashed rail below `lg`, two rows of three from `lg`; never six in one row. Copy lives under `home.steps.*`. Details: `docs/design/layout.md#home-how-it-works-section`.
+
+## Avoid
+Hero search boxes, carousels, sticky inquiry bars, pop-ups, decorative animation, photos behind hero text, stock photos as real people or facilities, ads beside clinical content.

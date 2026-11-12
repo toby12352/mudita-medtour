@@ -1,0 +1,112 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../../../assets/logo/logo.jpg';
+import Container from '../ui/Container.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { getLocale, localizePath, stripLocale, useTranslations, type Locale } from '../../i18n/ui';
+import { mainNavigation } from '../../lib/navigation';
+import { site } from '../../lib/site';
+
+interface Props {
+  /** URL of the current page in each language that has it. */
+  alternates: Partial<Record<Locale, string>>;
+}
+
+const { alternates } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const sitePath = stripLocale(Astro.url.pathname).replace(/\/?$/, '/');
+
+function isCurrent(href: string): boolean {
+  if (href === '/') return sitePath === '/';
+  return sitePath.startsWith(href);
+}
+
+const currentSection = mainNavigation.find((item) => isCurrent(item.href));
+---
+
+<header class="border-border bg-surface/95 sticky top-0 z-40 border-b backdrop-blur">
+  <Container class="flex min-h-16 flex-wrap items-center gap-x-4 md:gap-x-6">
+    <a href={localizePath(locale, '/')} class="rounded-control shrink-0 py-1">
+      <Image
+        src={logo}
+        alt={site.name}
+        width={80}
+        height={80}
+        densities={[1, 2]}
+        loading="eager"
+        class="size-20"
+      />
+    </a>
+
+    <div class="md:border-border ms-auto flex items-center gap-1 md:order-last md:ms-0 md:border-s md:ps-4">
+      <LanguageSwitcher alternates={alternates} fallbackPath={currentSection?.href ?? '/'} />
+
+      <button
+        type="button"
+        class="rounded-control text-ink hover:bg-surface-muted inline-flex size-11 items-center justify-center md:hidden"
+        aria-controls="main-menu"
+        aria-expanded="false"
+        data-menu-toggle
+      >
+        <span class="sr-only">{t('nav.menu')}</span>
+        <svg
+          class="size-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <nav
+      id="main-menu"
+      aria-label={t('nav.main')}
+      class="hidden w-full pb-4 md:ms-auto md:block md:w-auto md:pb-0"
+      data-menu
+    >
+      <ul class="flex flex-col gap-1 md:flex-row md:items-center md:gap-2">
+        {mainNavigation.map((item) => (
+          <li>
+            <a
+              href={localizePath(locale, item.href)}
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+              class="rounded-control text-ink-muted hover:bg-surface-muted hover:text-ink aria-[current=page]:text-accent block px-3 py-2 font-medium"
+            >
+              {t(item.labelKey)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </Container>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.classList.toggle('hidden', !open);
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>

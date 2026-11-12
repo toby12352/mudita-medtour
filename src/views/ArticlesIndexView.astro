@@ -1,0 +1,30 @@
+---
+import ArticleCard from '../components/common/ArticleCard.astro';
+import Container from '../components/ui/Container.astro';
+import { getLocale, useTranslations } from '../i18n/ui';
+import MainLayout from '../layouts/MainLayout.astro';
+import { getPublishedArticles } from '../lib/articles';
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const articles = await getPublishedArticles(locale);
+---
+
+<MainLayout title={t('articles.title')} description={t('articles.description')}>
+  <Container class="py-12 sm:py-16">
+    <h1>{t('articles.title')}</h1>
+    <p class="text-ink-muted mt-4 max-w-2xl text-lg">{t('articles.lead')}</p>
+
+    {articles.length > 0 ? (
+      <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {articles.map((article) => (
+          <li>
+            <ArticleCard article={article} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="text-ink-muted mt-10">{t('articles.empty')}</p>
+    )}
+  </Container>
+</MainLayout>

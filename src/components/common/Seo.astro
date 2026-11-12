@@ -1,0 +1,83 @@
+---
+import { getImage } from 'astro:assets';
+import logo from '../../../assets/logo/logo.jpg';
+import { defaultLocale, getLocale, ogLocales, useTranslations, type Locale } from '../../i18n/ui';
+import { site } from '../../lib/site';
+import type { SeoProps } from '../../types/seo';
+
+type Props = SeoProps;
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const {
+  title,
+  description = t('site.description'),
+  canonical,
+  image,
+  type = 'website',
+  noindex = false,
+  publishedTime,
+  modifiedTime,
+  alternates = {},
+} = Astro.props;
+
+const fullTitle = title ? `${title} | ${site.name}` : site.name;
+const canonicalUrl = new URL(canonical ?? Astro.url.pathname, Astro.site);
+const shareImage = image ?? { src: logo.src, alt: site.name };
+const imageUrl = new URL(shareImage.src, Astro.site).href;
+const favicon = await getImage({ src: logo, width: 32, height: 32, format: 'png' });
+const appleTouchIcon = await getImage({ src: logo, width: 180, height: 180, format: 'png' });
+
+const alternateLinks = (Object.entries(alternates) as [Locale, string][]).map(([lang, path]) => ({
+  lang,
+  href: new URL(path, Astro.site).href,
+}));
+const defaultAlternate = alternates[defaultLocale];
+const otherOgLocales = alternateLinks
+  .filter((link) => link.lang !== locale)
+  .map((link) => ogLocales[link.lang]);
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+{alternateLinks.length > 1 && (
+  <>
+    {alternateLinks.map((link) => (
+      <link rel="alternate" hreflang={link.lang} href={link.href} />
+    ))}
+    {defaultAlternate && (
+      <link rel="alternate" hreflang="x-default" href={new URL(defaultAlternate, Astro.site)} />
+    )}
+  </>
+)}
+
+<link rel="icon" type="image/png" sizes="32x32" href={favicon.src} />
+<link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon.src} />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content={ogLocales[locale]} />
+{otherOgLocales.map((ogLocale) => (
+  <meta property="og:locale:alternate" content={ogLocale} />
+))}
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:alt" content={shareImage.alt} />
+{type === 'article' && publishedTime && (
+  <meta property="article:published_time" content={publishedTime.toISOString()} />
+)}
+{type === 'article' && modifiedTime && (
+  <meta property="article:modified_time" content={modifiedTime.toISOString()} />
+)}
+
+<meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+<meta name="twitter:image:alt" content={shareImage.alt} />

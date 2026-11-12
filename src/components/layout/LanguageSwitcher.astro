@@ -1,0 +1,46 @@
+---
+import {
+  getLocale,
+  languageNames,
+  localizePath,
+  locales,
+  useTranslations,
+  type Locale,
+} from '../../i18n/ui';
+
+interface Props {
+  /** URL of the current page in each language that has it. */
+  alternates: Partial<Record<Locale, string>>;
+  /** Unprefixed path used for a language without this page, such as the section index. */
+  fallbackPath: string;
+}
+
+const { alternates, fallbackPath } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const links = locales.map((lang) => ({
+  lang,
+  label: languageNames[lang],
+  href: alternates[lang] ?? localizePath(lang, fallbackPath),
+  current: lang === locale,
+}));
+---
+
+<nav aria-label={t('nav.language')}>
+  <ul class="flex items-center gap-1">
+    {links.map((link) => (
+      <li class:list={[link.current && 'hidden sm:block']}>
+        <a
+          href={link.href}
+          lang={link.lang}
+          hreflang={link.lang}
+          aria-current={link.current ? 'true' : undefined}
+          class="rounded-control text-ink-muted hover:bg-surface-muted hover:text-ink aria-[current=true]:text-accent inline-flex min-h-11 min-w-11 items-center justify-center px-2 font-medium"
+        >
+          {link.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

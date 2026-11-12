@@ -1,0 +1,142 @@
+@import 'tailwindcss';
+/* Myanmar glyphs only; weights match body (400), navigation (500), and headings (600). */
+@import '@fontsource/noto-sans-myanmar/myanmar-400.css';
+@import '@fontsource/noto-sans-myanmar/myanmar-500.css';
+@import '@fontsource/noto-sans-myanmar/myanmar-600.css';
+
+/*
+ * Design tokens. Usage rules and contrast notes: docs/design/color.md.
+ * Secondary gold fails contrast on white: use it only behind dark text or as decoration.
+ * Spacing uses Tailwind's default 0.25rem scale.
+ */
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans Myanmar', sans-serif;
+
+  --color-primary-50: #f9f3f4;
+  --color-primary-100: #efe2e5;
+  --color-primary-700: #7c0d29;
+
+  --color-secondary: #f5ba45;
+  --color-secondary-50: #fef9f0;
+  --color-secondary-100: #fdf1da;
+
+  --color-accent: #a01839;
+
+  --color-surface: var(--color-white);
+  --color-surface-muted: var(--color-slate-50);
+  --color-ink: var(--color-slate-900);
+  --color-ink-muted: var(--color-slate-600);
+  --color-border: var(--color-slate-200);
+
+  --radius-control: 0.5rem;
+  --radius-card: 0.75rem;
+
+  --shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.05), 0 4px 12px -2px rgb(15 23 42 / 0.08);
+
+  --container-page: 72rem;
+  --container-reading: 46rem;
+}
+
+/*
+ * The first screen below the sticky header (5rem logo, 0.5rem padding, 1px border).
+ * svh is the viewport while mobile browser bars show, so the bottom is in view on load.
+ */
+@utility min-h-first-screen {
+  min-height: calc(100svh - 5.5rem - 1px);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-surface text-ink min-h-dvh font-sans leading-relaxed antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-ink font-semibold tracking-tight text-balance;
+  }
+
+  h1 {
+    @apply text-3xl leading-tight sm:text-4xl lg:text-5xl;
+  }
+
+  h2 {
+    @apply text-2xl leading-snug sm:text-3xl;
+  }
+
+  h3 {
+    @apply text-xl leading-snug;
+  }
+
+  /* Myanmar stacks vowels and medials above and below the line; tight leading clips them. */
+  :lang(my) :is(h1, h2, h3, h4) {
+    @apply leading-normal tracking-normal;
+  }
+
+  :focus-visible {
+    @apply outline-accent outline-2 outline-offset-2;
+  }
+
+  img,
+  video {
+    @apply h-auto max-w-full;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Typography for rendered Markdown/MDX bodies. */
+@layer components {
+  .prose-content {
+    @apply text-ink text-base leading-relaxed sm:text-lg;
+  }
+
+  .prose-content > * + * {
+    @apply mt-5;
+  }
+
+  .prose-content h2 {
+    @apply mt-10 text-2xl;
+  }
+
+  .prose-content h3 {
+    @apply mt-8 text-xl;
+  }
+
+  .prose-content a {
+    @apply text-primary-700 hover:text-accent underline underline-offset-2;
+  }
+
+  .prose-content ul {
+    @apply list-disc space-y-2 pl-6;
+  }
+
+  .prose-content ol {
+    @apply list-decimal space-y-2 pl-6;
+  }
+
+  .prose-content blockquote {
+    @apply border-secondary text-ink-muted border-l-4 pl-4 italic;
+  }
+
+  .prose-content img {
+    @apply rounded-card;
+  }
+}

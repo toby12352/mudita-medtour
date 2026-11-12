@@ -1,0 +1,58 @@
+---
+import { render } from 'astro:content';
+import Container from '../components/ui/Container.astro';
+import { localizePath, useTranslations } from '../i18n/ui';
+import MainLayout from '../layouts/MainLayout.astro';
+import { getArticleAlternates, getArticleLocale, type Article } from '../lib/articles';
+import { formatDate, toIsoDate } from '../utils/date';
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const locale = getArticleLocale(article);
+const t = useTranslations(locale);
+const { title, description, pubDate, updatedDate } = article.data;
+const { Content } = await render(article);
+const alternates = await getArticleAlternates(article);
+---
+
+<MainLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={pubDate}
+  modifiedTime={updatedDate}
+  alternates={alternates}
+>
+  <Container as="article" width="reading" class="py-12 sm:py-16">
+    <header class="mb-10">
+      <p class="text-ink-muted text-sm">
+        <a
+          href={localizePath(locale, '/articles/')}
+          class="text-primary-700 hover:text-accent font-medium"
+        >
+          {t('articles.title')}
+        </a>
+      </p>
+      <h1 class="mt-3">{title}</h1>
+      <p class="text-ink-muted mt-4 text-lg">{description}</p>
+      <p class="text-ink-muted mt-4 text-sm">
+        {t('article.published')}{' '}
+        <time datetime={toIsoDate(pubDate)}>{formatDate(pubDate, locale)}</time>
+        {updatedDate && (
+          <>
+            {' '}
+            &middot; {t('article.updated')}{' '}
+            <time datetime={toIsoDate(updatedDate)}>{formatDate(updatedDate, locale)}</time>
+          </>
+        )}
+      </p>
+    </header>
+
+    <div class="prose-content">
+      <Content />
+    </div>
+  </Container>
+</MainLayout>

@@ -1,0 +1,41 @@
+---
+import Seo from '../components/common/Seo.astro';
+import Footer from '../components/layout/Footer.astro';
+import Header from '../components/layout/Header.astro';
+import { getLocale, localizePath, locales, stripLocale, useTranslations } from '../i18n/ui';
+import type { SeoProps } from '../types/seo';
+import '../styles/global.css';
+
+type Props = SeoProps;
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const sitePath = stripLocale(Astro.url.pathname);
+const alternates =
+  Astro.props.alternates ??
+  Object.fromEntries(locales.map((lang) => [lang, localizePath(lang, sitePath)]));
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <Seo {...Astro.props} alternates={alternates} />
+  </head>
+  <body class="flex flex-col">
+    <a
+      href="#main-content"
+      class="rounded-control bg-primary-700 sr-only z-50 px-4 py-2 text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+    >
+      {t('layout.skipToContent')}
+    </a>
+    <Header alternates={alternates} />
+    <main id="main-content" tabindex="-1" class="flex-1 focus:outline-none">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,36 @@
+---
+description: Every page, UI string, and article is created in both English and Myanmar
+alwaysApply: true
+---
+
+# Two languages: English and Myanmar
+
+The site is bilingual. English (`en`) is at `/`, Myanmar (`my`) at `/my/`. Details: `docs/design/languages.md`.
+
+## Always create both languages in the same task
+- **Article:** `src/content/articles/en/<slug>.md` and `src/content/articles/my/<slug>.md`, same file name. A production build fails if either is missing.
+- **Page:** markup in a shared view in `src/views/`, plus one route per locale (`src/pages/<path>.astro` and `src/pages/my/<path>.astro`).
+- **UI text:** add the key to both `en` and `my` in `src/i18n/ui.ts`. Never hard-code visible text, `aria-label`, or SEO copy in components.
+- Editing English copy means updating the Myanmar copy too, and the other way round.
+
+## Myanmar quality
+- Real Burmese in Unicode (not Zawgyi). Never leave English, placeholders, or "TODO: translate" in a `my` file.
+- Translate title, description, headings, body, and image alt text. Keep slugs, dates, figures, and URLs identical.
+- First use of a medical term: Burmese, then the English term in brackets.
+- Western digits for prices, dates, and figures.
+- If you cannot translate something confidently, translate it as well as you can and tell the user which passages need a fluent reviewer.
+
+## Links and locale
+```astro
+---
+import { getLocale, localizePath, useTranslations } from '../i18n/ui';
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+<!-- Good -->
+<a href={localizePath(locale, '/articles/')}>{t('nav.articles')}</a>
+<!-- Bad: hand-built prefix and hard-coded text -->
+<a href="/my/articles/">Articles</a>
+```
+- Article URLs come from `getArticleUrl(article)`; dates from `formatDate(date, locale)`.
+- Do not add a language fallback that shows English on a Myanmar URL.
