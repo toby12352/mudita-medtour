@@ -2,6 +2,12 @@
 
 Record every top-layer design change here, newest first: the date, what changed, and why. See [README.md](README.md) for what counts as top-layer.
 
+## 2026-11-13: Blank article fields no longer fail the build
+
+- A Netlify deploy failed because the editor saved a cleared Updated date as `updatedDate: ''`, which the schema read as an invalid date. `src/content.config.ts` now treats a missing, `null`, or empty value as omitted for every article field: `title`, `description`, `pubDate`, `updatedDate`, and `draft` (which falls back to `false`). Present but invalid values still fail.
+- The article page hides the description, published date, or updated date when they are missing; the article card hides its date and description. Articles without `pubDate` sort last. A missing title leaves an empty heading, so authors should still fill it in; the editor still asks for it.
+- Documented in [content.md](content.md#articles); `.cursor/rules/content.mdc` updated.
+
 ## 2026-11-13: Article editor at /admin
 
 - Authors publish from `/admin` (Sveltia CMS 0.264.0). Login is GitHub. A save commits Markdown and images; Netlify rebuilds. No database and no Git Gateway. Documented in [content.md](content.md#articles) and the README.

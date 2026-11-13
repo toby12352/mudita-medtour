@@ -10,11 +10,13 @@ An article is one file in the language it was written in: `en/<slug>.md` or `my/
 
 Authors add posts at `/admin`. That page is Sveltia CMS: GitHub login, then a form for the fields below and a Markdown body. Images dropped into the body are stored in `public/images/articles` and linked as `/images/articles/<file>`. They are not run through `astro:assets`, so the author resizes a photo before uploading. `/admin` is not in the menu and is marked `noindex`.
 
-Required in every article:
+Fill these in every article:
 
 - `title`: plain language, outcome first. "Hip replacement abroad: costs, recovery, and risks", not "THA overview".
 - `description`: one or two sentences. Used for listings and search results.
 - `pubDate`, and `updatedDate` whenever the content is materially revised. Visitors see both on the page.
+
+The editor asks for the title, description, and publication date, but the build does not require them. A field that is missing, `null`, or saved empty (`''`, as the editor does when a field is cleared) is treated as omitted: the page leaves out that line, and an article without `pubDate` sorts last. A value that is present but invalid, such as `pubDate: soon`, still fails the build.
 
 Body structure:
 

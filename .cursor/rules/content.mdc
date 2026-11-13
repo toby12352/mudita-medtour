@@ -13,6 +13,7 @@ An article is one file in `src/content/articles/en/<slug>.md` or `src/content/ar
 
 ## Article frontmatter
 Validated by `src/content.config.ts`; the build fails on invalid data. Keep the same fields in `public/admin/config.yml`. `title` and `description` are in the article's own language.
+Every field may be missing, `null`, or `''` (the CMS saves cleared fields that way); the schema treats that as omitted, so views must not assume `title`, `description`, `pubDate`, or `updatedDate` exist. Authors should still fill title, description, and pubDate.
 ```yaml
 ---
 title: 'Hip replacement abroad: costs, recovery, and risks' # quote titles containing a colon

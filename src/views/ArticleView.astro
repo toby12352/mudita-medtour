@@ -37,18 +37,24 @@ const alternates = await getArticleAlternates(article);
         </a>
       </p>
       <h1 class="mt-3">{title}</h1>
-      <p class="text-ink-muted mt-4 text-lg">{description}</p>
-      <p class="text-ink-muted mt-4 text-sm">
-        {t('article.published')}{' '}
-        <time datetime={toIsoDate(pubDate)}>{formatDate(pubDate, locale)}</time>
-        {updatedDate && (
-          <>
-            {' '}
-            &middot; {t('article.updated')}{' '}
-            <time datetime={toIsoDate(updatedDate)}>{formatDate(updatedDate, locale)}</time>
-          </>
-        )}
-      </p>
+      {description && <p class="text-ink-muted mt-4 text-lg">{description}</p>}
+      {(pubDate || updatedDate) && (
+        <p class="text-ink-muted mt-4 text-sm">
+          {pubDate && (
+            <>
+              {t('article.published')}{' '}
+              <time datetime={toIsoDate(pubDate)}>{formatDate(pubDate, locale)}</time>
+            </>
+          )}
+          {pubDate && updatedDate && <> &middot; </>}
+          {updatedDate && (
+            <>
+              {t('article.updated')}{' '}
+              <time datetime={toIsoDate(updatedDate)}>{formatDate(updatedDate, locale)}</time>
+            </>
+          )}
+        </p>
+      )}
     </header>
 
     <div class="prose-content">

@@ -28,12 +28,15 @@ async function getAllPublishedArticles(): Promise<Article[]> {
   return getCollection('articles', ({ data }) => import.meta.env.DEV || !data.draft);
 }
 
-/** Published articles in one locale, newest first. */
+/** Published articles in one locale, newest first. Articles without a date come last. */
 export async function getPublishedArticles(locale: Locale): Promise<Article[]> {
   const articles = (await getAllPublishedArticles()).filter(
     (article) => getArticleLocale(article) === locale,
   );
-  return articles.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  return articles.sort(
+    (a, b) =>
+      (b.data.pubDate?.valueOf() ?? -Infinity) - (a.data.pubDate?.valueOf() ?? -Infinity) || 0,
+  );
 }
 
 /** URLs of the article in every locale where a published translation exists. */

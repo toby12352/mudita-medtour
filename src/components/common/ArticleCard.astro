@@ -12,13 +12,17 @@ const { title, description, pubDate } = article.data;
 ---
 
 <article class="border-border bg-surface rounded-card shadow-card flex h-full flex-col border p-6">
-  <time datetime={toIsoDate(pubDate)} class="text-ink-muted text-sm">
-    {formatDate(pubDate, getArticleLocale(article))}
-  </time>
-  <Heading class="mt-2 text-xl">
+  {
+    pubDate && (
+      <time datetime={toIsoDate(pubDate)} class="text-ink-muted text-sm">
+        {formatDate(pubDate, getArticleLocale(article))}
+      </time>
+    )
+  }
+  <Heading class:list={['text-xl', pubDate && 'mt-2']}>
     <a href={getArticleUrl(article)} class="hover:text-accent underline-offset-4 hover:underline">
       {title}
     </a>
   </Heading>
-  <p class="text-ink-muted mt-3">{description}</p>
+  {description && <p class="text-ink-muted mt-3">{description}</p>}
 </article>
