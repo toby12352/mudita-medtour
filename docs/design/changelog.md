@@ -14,6 +14,13 @@ Record every top-layer design change here, newest first: the date, what changed,
 - An article is one file in `en/` or `my/`. A matching translation is optional, and the language switcher falls back to that language's article list. The production build no longer fails when the other language is missing.
 - `.cursor/rules/core.mdc`, `i18n.mdc`, and `content.mdc` updated.
 
+## 2026-11-13: Hospital logos link out
+
+- All seven hospital logos now link to the URLs the site owner supplied, in a new tab. The URLs are in `src/lib/hospitals.ts`.
+- A hidden `sr-only` label, `common.opensInNewTab`, tells screen-reader users that each link opens a new tab. Nothing changes visually. Documented in [layout.md](layout.md#home-hospital-strip).
+- Two links point to a different site than their logo names: the Phyathai Sriracha logo goes to the Phyathai group site, and the Samitivej Hospitals logo goes to Samitivej Chinatown. Three links open Thai-language pages.
+- `.cursor/rules/ui.mdc` updated.
+
 ## 2026-11-13: Hospital strip heading, no pause button
 
 - The hospital strip now opens like the how-it-works section: an `h2` "Featured Hospital Partners" (`home.hospitals.title`), the short primary bar, and a lead sentence about internationally accredited and ISO-certified facilities (`home.hospitals.lead`). The section uses standard `py-16` padding. Replaces the small "Hospitals" label. Documented in [layout.md](layout.md#home-hospital-strip).

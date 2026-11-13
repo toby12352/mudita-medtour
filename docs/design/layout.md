@@ -59,7 +59,8 @@ Between the welcome banner and the how-it-works section sits a band of Thai hosp
 - Pausing: hover or keyboard focus stops the row. There is no pause button, at the site owner's request. This falls short of WCAG 2.2.2 (a way to pause motion over five seconds) for touch users, who can only stop it through their device's reduced-motion setting. Add a pause control back if the site is audited against WCAG.
 - Reduced motion: no animation, no edge fade, no duplicate. The logos wrap as a centered still row with tighter gaps (two per row on phones). The global reduced-motion rule alone would freeze the track off-center, so the component switches layout instead.
 - Logos load `eager` with `fetchpriority="low"`, an exception to the lazy-loading rule below: lazy images inside the clipped, moving track started loading only once they were already on screen.
-- Data: `src/lib/hospitals.ts` lists each hospital's official English name (also its alt text on both locales), logo, and an optional `href`. Without `href` the logo is an image, not a link. With one, it becomes a link to the hospital's official site in a new tab (`rel="noopener noreferrer"`) with a 44px-high hit area, so adding links later is a data change.
+- Data: `src/lib/hospitals.ts` lists each hospital's official English name (also its alt text on both locales), logo, and an optional `href`. Without `href` the logo is an image, not a link. With one, it becomes a link to the hospital's official site in a new tab (`rel="noopener noreferrer"`) with a 44px-high hit area. All seven hospitals have an `href`.
+- Each link ends with a hidden `sr-only` label, `common.opensInNewTab` ("(opens in a new tab)"), so screen readers announce the new tab. The logo shows no icon. The link's accessible name is the hospital name plus that label.
 
 This is the only moving element on the site. Do not copy the strip to other pages, add more marquees, or turn it into a slideshow.
 
