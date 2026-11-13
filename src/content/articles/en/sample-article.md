@@ -12,7 +12,7 @@ This is placeholder content. It exists to show that articles in `src/content/art
 
 Each article is one Markdown or MDX file in one language folder. `en/<file-name>.md` is published at `/articles/<file-name>/`, and `my/<file-name>.md` is published at `/my/articles/<file-name>/`. A file with the same name in the other folder is optional. When it exists, the language switcher opens it. The frontmatter provides the title, description, and publication date.
 
-## Writing guidelines
+## Writing guideliness
 
 ![](/images/articles/Vibrant%20Yangon%20Skyline%20Reflection.png)
 
