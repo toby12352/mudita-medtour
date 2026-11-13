@@ -2,7 +2,7 @@
 title: Sample article
 description: A placeholder article that demonstrates Markdown content, schema validation, and static article routes.
 pubDate: 2026-11-12
-updatedDate: ''
+updatedDate: 2026-11-13
 draft: false
 ---
 
