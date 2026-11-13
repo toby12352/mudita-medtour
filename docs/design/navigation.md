@@ -58,6 +58,8 @@ A single slim `bg-primary-700` bar with white text. It does not repeat the logo 
 - **Copyright** at the inline start: `© {year} {site.name}` in `text-sm`.
 - **Social links** at the inline end, behind a light `border-s` divider from `sm`: Line, Viber, Messenger, Facebook, in that order and no others. They come from `socialLinks` in `src/lib/site.ts`, which takes each `href` from `contactChannels`, so the footer and the [contact page](content.md#contact-page) always share the same URLs. Edit the details there, not in the component.
 - Each social link is an icon-only `size-11` link with a translated `sr-only` name (`footer.*` in `src/i18n/ui.ts`) and an `aria-hidden` icon from `BrandIcon` (`src/components/common/BrandIcon.astro`, Simple Icons, CC0). The list has a translated `aria-label`.
+- Viber is the exception: its icon is the `<summary>` of a `<details>` that opens a white `rounded-card shadow-card` list of numbers (`ViberNumbers`, shared with the contact page) above the icon, aligned to its inline end. A click outside or Escape closes it.
+- Messenger and Facebook try the Facebook app first on phones and tablets, as on the [contact page](content.md#contact-page).
 - Icons are white and turn gold (`hover:text-secondary`, 6.2:1 on primary) on hover. Accent is too close to primary to show on this bar, so the footer links override the focus outline color to white (`focus-visible:outline-white`); the outline itself stays.
 - Below `sm`, the copyright sits on its own line and the icons move to the next line, aligned to the end.
 - Will hold legal and trust links when they exist: medical disclaimer, editorial policy, privacy, accessibility statement, and contact details with a physical address. Keep them in the same bar style.
@@ -71,5 +73,5 @@ A single slim `bg-primary-700` bar with white text. It does not repeat the logo 
 - Each language is named in itself ("English", "မြန်မာ") and marked with `lang` and `hreflang`.
 - Each entry is a link to the same page in that language, not a `Button`: it moves to another page.
 - The current language has `aria-current="true"` and uses the current-state accent, like the main navigation. Below `sm`, only the other language is shown so the bar fits at 320px.
-- If the page has no translation, the link goes to that language's section index (for example its articles list). Published articles always have a translation; the build enforces it.
+- If the page has no translation, the link goes to that language's section index (for example its articles list). An article published in only one language uses this fallback.
 - The group is a `<nav>` with a translated `aria-label` ("Language"). Links are at least 44px high.

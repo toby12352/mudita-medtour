@@ -47,9 +47,25 @@ The home page opens with an illustrated banner (`src/views/HomeView.astro`):
 
 Do not reuse the banner image on other pages, put text on the picture, add a scrim, or animate it.
 
+## Home hospital strip
+
+Between the welcome banner and the how-it-works section sits a band of Thai hospital logos (`src/components/home/HospitalStrip.astro`). Patients recognize these names; seeing them early answers "which hospitals?" before the process is explained. The logos form a quiet logo cloud, not a slideshow: no boxes, arrows, dots, or captions.
+
+- A white band (`bg-surface`, `border-border` bottom edge) between the gold banner and the muted how-it-works band, a standard `py-16` section.
+- The header matches the how-it-works section: a centered `h2` (`home.hospitals.title`, "Featured Hospital Partners"), a short `bg-primary-700` bar (`h-0.5 w-12`, `mt-4`), and a one-sentence `text-lg text-ink-muted` lead (`home.hospitals.lead`, `mt-6`, `max-w-2xl`). The logo row starts `mt-12` below the lead.
+- Open item (principle 4): the heading and lead call the hospitals partners and describe them as internationally accredited and ISO-certified. The site owner chose this wording. When hospital pages exist, name each accrediting body (for example JCI) and link to where the accreditation can be verified.
+- Logos are one full-viewport row at `h-10 sm:h-12`, natural width, `gap-x-16`, in their own colors. The source files in `assets/hospitals/` are trimmed to their artwork so equal height means equal visual size. Replace a logo with a larger master if it looks soft on Retina screens (Vejthani and Kluaynamthai are about 60px tall).
+- Motion: the list is rendered twice and the track moves by half its width in 48 seconds, linear and endless, toward the inline start (reversed for right-to-left). The edges fade with a CSS mask so logos glide in and out rather than appearing at a hard edge. The second copy is `aria-hidden`, and its links (when there are any) are out of the tab order.
+- Pausing: hover or keyboard focus stops the row. There is no pause button, at the site owner's request. This falls short of WCAG 2.2.2 (a way to pause motion over five seconds) for touch users, who can only stop it through their device's reduced-motion setting. Add a pause control back if the site is audited against WCAG.
+- Reduced motion: no animation, no edge fade, no duplicate. The logos wrap as a centered still row with tighter gaps (two per row on phones). The global reduced-motion rule alone would freeze the track off-center, so the component switches layout instead.
+- Logos load `eager` with `fetchpriority="low"`, an exception to the lazy-loading rule below: lazy images inside the clipped, moving track started loading only once they were already on screen.
+- Data: `src/lib/hospitals.ts` lists each hospital's official English name (also its alt text on both locales), logo, and an optional `href`. Without `href` the logo is an image, not a link. With one, it becomes a link to the hospital's official site in a new tab (`rel="noopener noreferrer"`) with a 44px-high hit area, so adding links later is a data change.
+
+This is the only moving element on the site. Do not copy the strip to other pages, add more marquees, or turn it into a slideshow.
+
 ## Home how-it-works section
 
-The welcome banner is followed by the patient journey in six steps (`src/components/home/HowItWorks.astro`): Contact, Planning, Travel, Procedure, Post-op, Follow-up.
+The welcome banner and hospital strip are followed by the patient journey in six steps (`src/components/home/HowItWorks.astro`): Contact, Planning, Travel, Procedure, Post-op, Follow-up.
 
 - A neutral band: `bg-surface-muted`, `border-border` bottom edge, `py-16`. The page's one gold band stays on the hero.
 - Centered `h2`, a short `bg-primary-700` bar (`h-0.5 w-12`), and a one-sentence lead. Each step is an `h3` and one sentence in `text-ink-muted`.
@@ -87,4 +103,4 @@ Existing code still uses some physical properties (for example `pl-6` on prose l
 
 ## Motion
 
-Keep motion minimal and functional (color transitions on hover). The global reduced-motion rule disables animation for users who request it. Do not add scroll-triggered or decorative animation to content pages.
+Keep motion minimal and functional (color transitions on hover). The global reduced-motion rule disables animation for users who request it. Do not add scroll-triggered or decorative animation to content pages. The one exception is the slow, pausable logo row in the [home hospital strip](#home-hospital-strip).

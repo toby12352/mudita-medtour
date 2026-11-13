@@ -2,8 +2,9 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
-// Keep frontmatter fields in sync with the future `/admin` CMS `articles` collection (GitHub backend, not Git Gateway).
-// Files live in one folder per locale (`en/`, `my/`); the same file name pairs the translations.
+// Keep frontmatter fields in sync with the article collections in public/admin/config.yml
+// (GitHub backend, not Git Gateway). One file per post, in `en/` or `my/`.
+// The same file name links the two languages when both exist; it is not required.
 const articles = defineCollection({
   loader: glob({ base: './src/content/articles', pattern: '*/*.{md,mdx}' }),
   schema: z.object({

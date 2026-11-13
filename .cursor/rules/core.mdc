@@ -10,7 +10,7 @@ Static information site for international patients. Astro 7 (SSG), TypeScript st
 ## Stack
 - Pages, layouts, and content UI are `.astro` components. React `.tsx` only for interactive islands with a `client:*` directive.
 - Every page uses `MainLayout`. Routes are files in `src/pages/`. Nav items live in `src/lib/navigation.ts`.
-- Bilingual, English and Myanmar: every page, UI string, and article is created in both languages (`.cursor/rules/i18n.mdc`).
+- Bilingual, English and Myanmar: every page and UI string is created in both languages. An article is one file in `en/` or `my/`; a matching translation is optional (`.cursor/rules/i18n.mdc`).
 - Style with Tailwind classes and the tokens in the `@theme` block of `src/styles/global.css`.
 - Do not invent colors, font sizes, breakpoints, button variants, or new shared components when an existing one fits.
 

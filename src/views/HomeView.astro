@@ -1,5 +1,6 @@
 ---
 import ArticleCard from '../components/common/ArticleCard.astro';
+import HospitalStrip from '../components/home/HospitalStrip.astro';
 import HowItWorks from '../components/home/HowItWorks.astro';
 import Skyline from '../components/home/Skyline.astro';
 import Button from '../components/ui/Button.astro';
@@ -32,6 +33,8 @@ const latestArticles = (await getPublishedArticles(locale)).slice(0, 3);
       </Container>
     </div>
   </section>
+
+  <HospitalStrip />
 
   <HowItWorks />
 

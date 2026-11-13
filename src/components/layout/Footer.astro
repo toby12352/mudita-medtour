@@ -1,5 +1,6 @@
 ---
 import BrandIcon from '../common/BrandIcon.astro';
+import ViberNumbers from '../common/ViberNumbers.astro';
 import Container from '../ui/Container.astro';
 import { getLocale, useTranslations } from '../../i18n/ui';
 import { site, socialLinks } from '../../lib/site';
@@ -7,6 +8,8 @@ import { site, socialLinks } from '../../lib/site';
 const locale = getLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
+const iconLinkClass =
+  'rounded-control hover:text-secondary inline-flex size-11 items-center justify-center text-white focus-visible:outline-white';
 ---
 
 <footer class="bg-primary-700 mt-16 text-white">
@@ -19,19 +22,54 @@ const year = new Date().getFullYear();
       aria-label={t('footer.social')}
       class="-me-3 flex items-center self-end sm:self-auto sm:border-s sm:border-white/30 sm:ps-2"
     >
-      {
-        socialLinks.map((link) => (
-          <li>
-            <a
-              href={link.href}
-              class="rounded-control hover:text-secondary inline-flex size-11 items-center justify-center text-white focus-visible:outline-white"
-            >
-              <BrandIcon name={link.network} class="size-5" />
-              <span class="sr-only">{t(link.labelKey)}</span>
+      {socialLinks.map(({ channel, labelKey }) => (
+        <li class="relative">
+          {channel.id === 'viber' ? (
+            <details data-viber-menu>
+              <summary
+                class:list={[
+                  iconLinkClass,
+                  'cursor-pointer list-none [&::-webkit-details-marker]:hidden',
+                ]}
+              >
+                <BrandIcon name={channel.id} class="size-5" />
+                <span class="sr-only">{t(labelKey)}</span>
+              </summary>
+              <ViberNumbers
+                numbers={channel.numbers}
+                class="rounded-card border-border bg-surface shadow-card absolute border end-0 bottom-full z-10 mb-2 w-max p-2"
+              />
+            </details>
+          ) : (
+            <a href={channel.href} data-app-href={channel.appHref} class={iconLinkClass}>
+              <BrandIcon name={channel.id} class="size-5" />
+              <span class="sr-only">{t(labelKey)}</span>
             </a>
-          </li>
-        ))
-      }
+          )}
+        </li>
+      ))}
     </ul>
   </Container>
 </footer>
+
+<script>
+  import '../../scripts/app-links';
+
+  const menus = document.querySelectorAll<HTMLDetailsElement>('[data-viber-menu]');
+
+  document.addEventListener('click', (event) => {
+    for (const menu of menus) {
+      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    for (const menu of menus) {
+      if (menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    }
+  });
+</script>

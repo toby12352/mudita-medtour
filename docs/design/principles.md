@@ -10,6 +10,8 @@ The content is the product. Typography and spacing do most of the work. Decorati
 
 The one exception is the home welcome banner: a still illustration may fill the first screen to make it feel calm and welcoming. The text sits beside or below it on a solid panel, never on the picture. It carries no meaning of its own and does not open the door to full-screen photos, search boxes, or carousels.
 
+The one moving element is the hospital logo strip below the banner: a single row of logos drifting slowly, paused on hover and focus, still under reduced motion. It names hospitals; it is not a slideshow, a rating carousel, or an advertisement, and it is not repeated on other pages.
+
 ## 2. One clear next step
 
 Each view has at most one primary action. Everything else is a secondary button or a text link. A visitor should never have to choose between several equally loud options.

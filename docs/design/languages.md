@@ -1,6 +1,6 @@
 # Languages
 
-The site is published in two languages, English and Myanmar (Burmese), with equal standing. Every page, interface string, and article exists in both. A visitor who switches language lands on the same page in the other language, never on a half-translated one.
+The site is published in two languages, English and Myanmar (Burmese), with equal standing. Every page and interface string exists in both. An article is published in the language it was written in; a matching file in the other language is optional. A visitor who switches language on a page lands on that page in the other language. On an article with no pair, the switcher goes to that language's article list.
 
 ## Locales and URLs
 
@@ -11,14 +11,14 @@ The site is published in two languages, English and Myanmar (Burmese), with equa
 
 English is the default locale. Locales are configured in `astro.config.mjs` (`i18n`) and in `locales` in `src/i18n/ui.ts`; keep the two lists the same.
 
-There is no fallback: a Myanmar URL never shows English content. Missing translations are caught at build time instead (see below).
+There is no fallback: a Myanmar URL never shows English content. A missing interface string fails `npm run check`. A missing article translation does not fail the build.
 
 ## Where translations live
 
 | What                                                            | Where                                                                       |
 | --------------------------------------------------------------- | --------------------------------------------------------------------------- |
 | Interface copy: navigation, buttons, headings in templates, SEO | `ui` dictionary in `src/i18n/ui.ts`, one key per string, both languages     |
-| Articles                                                        | `src/content/articles/en/<slug>.md` and `src/content/articles/my/<slug>.md` |
+| Articles                                                        | `src/content/articles/en/<slug>.md` or `my/<slug>.md`, one file per post    |
 | Page markup                                                     | A shared view in `src/views/`, rendered by one route file per locale        |
 | Brand name                                                      | `site.name` in `src/lib/site.ts`, the same in both languages                |
 | Slogan                                                          | `site.slogan` in `src/lib/site.ts`, Burmese in both languages (`lang="my"`) |
@@ -34,12 +34,9 @@ Never hard-code visible text in a component or page; add a key to `ui` instead. 
 
 ## Adding an article
 
-1. Write `src/content/articles/en/<slug>.md` and `src/content/articles/my/<slug>.md` in the same task.
-2. Use the same file name (slug) in both folders; it pairs the translations and the language switcher.
-3. Translate the title, description, headings, body, and source descriptions. Keep dates, figures, and source URLs identical.
-4. Publish both together. A production build fails if a published article has no published translation.
-
-Slugs stay in English Latin letters (`hip-replacement`) so URLs are stable and shareable.
+1. Write one file: `src/content/articles/en/<slug>.md` or `src/content/articles/my/<slug>.md`. Authors do this at `/admin`.
+2. Keep the slug in English Latin letters (`hip-replacement`) so the URL is stable and shareable.
+3. A second file with the same name is optional. When it exists, the language switcher opens it. Translate the title, description, headings, body, and image descriptions. Keep dates, figures, and source URLs identical.
 
 ## Language switcher
 
@@ -55,4 +52,4 @@ Slugs stay in English Latin letters (`hip-replacement`) so URLs are stable and s
 
 ## SEO
 
-`MainLayout` sets `<html lang>` from the current locale. `Seo` emits `hreflang` alternates for each translation plus `x-default` (English), and `og:locale` (`en_US`, `my_MM`). The sitemap lists the alternates too.
+`MainLayout` sets `<html lang>` from the current locale. When a page or article exists in both languages, `Seo` emits `hreflang` alternates for each plus `x-default` (English), and `og:locale` (`en_US`, `my_MM`). An article in one language does not claim the other. The sitemap lists the alternates that exist.

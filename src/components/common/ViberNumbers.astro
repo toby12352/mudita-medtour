@@ -1,0 +1,29 @@
+---
+import { getLocale, useTranslations } from '../../i18n/ui';
+import type { ViberNumber } from '../../lib/site';
+
+interface Props {
+  numbers: ViberNumber[];
+  class?: string;
+}
+
+const { numbers, class: className } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<ul aria-label={t('contact.viberNumbers')} class:list={['flex flex-col gap-1', className]}>
+  {numbers.map((number) => (
+    <li>
+      <a
+        href={number.href}
+        class="group/number rounded-control hover:bg-surface-muted flex min-h-11 flex-col justify-center px-3 py-2"
+      >
+        <span class="text-ink-muted text-sm">{t(number.countryKey)}</span>
+        <span class="text-ink group-hover/number:text-accent font-medium" dir="ltr" translate="no">
+          {number.value}
+        </span>
+      </a>
+    </li>
+  ))}
+</ul>

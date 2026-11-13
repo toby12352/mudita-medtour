@@ -9,10 +9,10 @@ alwaysApply: false
 Details: `docs/design/content.md`.
 
 ## Article files
-Every article is a pair with the same file name: `src/content/articles/en/<slug>.md` and `src/content/articles/my/<slug>.md`. Write both in the same task; see `.cursor/rules/i18n.mdc`. Slugs are English Latin letters.
+An article is one file in `src/content/articles/en/<slug>.md` or `src/content/articles/my/<slug>.md`. A matching file in the other folder is optional; the same file name links the language switcher. Slugs are English Latin letters. See `.cursor/rules/i18n.mdc`.
 
 ## Article frontmatter
-Validated by `src/content.config.ts`; the build fails on invalid data. Both files of a pair use the same `pubDate`, `updatedDate`, and `draft`; `title` and `description` are translated.
+Validated by `src/content.config.ts`; the build fails on invalid data. Keep the same fields in `public/admin/config.yml`. `title` and `description` are in the article's own language.
 ```yaml
 ---
 title: 'Hip replacement abroad: costs, recovery, and risks' # quote titles containing a colon
@@ -44,4 +44,5 @@ Plain language, "you", outcome first, explain terms on first use. No superlative
 - Every page uses `MainLayout` with `title` and `description`, taken from `src/i18n/ui.ts` or the article.
 - Page markup lives in a view in `src/views/`, rendered by an English route and a Myanmar route under `src/pages/my/`.
 - Treatment guides follow the section order in `docs/design/content.md`.
-- Phone, LINE, Viber, Messenger, and Facebook details live only in `contactChannels` in `src/lib/site.ts` (used by the contact page and footer). Do not hard-code numbers or profile URLs in views or components.
+- LINE, Viber, Messenger, and Facebook details live only in `contactChannels` in `src/lib/site.ts` (used by the contact page and footer). Do not hard-code numbers or profile URLs in views or components. No phone row on the contact page.
+- Viber numbers are chosen from a native `<details>` list (`ViberNumbers`), never a modal. Links with an `appHref` render `data-app-href` and rely on `src/scripts/app-links.ts`.

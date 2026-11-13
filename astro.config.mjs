@@ -12,6 +12,25 @@ const { SITE_URL } = loadEnv(process.env.NODE_ENV ?? 'production', process.cwd()
 const locales = ['en', 'my'];
 const defaultLocale = 'en';
 
+/** `astro dev` does not serve a public directory index. Netlify does, so /admin works there. */
+function adminDirectoryIndex() {
+  return {
+    name: 'admin-directory-index',
+    /**
+     * @param {import('vite').ViteDevServer} server
+     */
+    configureServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        const [path, query] = (req.url ?? '').split('?');
+        if (path === '/admin' || path === '/admin/') {
+          req.url = `/admin/index.html${query ? `?${query}` : ''}`;
+        }
+        next();
+      });
+    },
+  };
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: SITE_URL || 'https://example.com',
@@ -31,6 +50,6 @@ export default defineConfig({
     }),
   ],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [adminDirectoryIndex(), tailwindcss()],
   },
 });

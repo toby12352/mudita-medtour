@@ -1,5 +1,6 @@
 ---
 import BrandIcon from '../components/common/BrandIcon.astro';
+import ViberNumbers from '../components/common/ViberNumbers.astro';
 import Container from '../components/ui/Container.astro';
 import { getLocale, useTranslations, type UiKey } from '../i18n/ui';
 import MainLayout from '../layouts/MainLayout.astro';
@@ -9,7 +10,6 @@ const locale = getLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 
 const channelCopy: Record<ContactChannelId, { name: UiKey; action: UiKey }> = {
-  phone: { name: 'contact.phone', action: 'contact.phoneAction' },
   line: { name: 'contact.line', action: 'contact.lineAction' },
   viber: { name: 'contact.viber', action: 'contact.viberAction' },
   messenger: { name: 'contact.messenger', action: 'contact.messengerAction' },
@@ -23,11 +23,47 @@ const channelCopy: Record<ContactChannelId, { name: UiKey; action: UiKey }> = {
     <p class="text-ink-muted mt-4 text-lg">{t('contact.lead')}</p>
 
     <ul aria-label={t('contact.channels')} class="mt-10 flex flex-col gap-4">
-      {
-        contactChannels.map((channel) => (
+      {contactChannels.map((channel) =>
+        channel.id === 'viber' ? (
+          <li>
+            <details class="group/viber rounded-card border-border bg-surface border">
+              <summary class="group/row rounded-card hover:bg-surface-muted flex cursor-pointer list-none items-center gap-4 p-4 group-open/viber:rounded-b-none sm:p-5 [&::-webkit-details-marker]:hidden">
+                <span class="rounded-control bg-surface-muted text-primary-700 group-hover/row:bg-surface inline-flex size-11 shrink-0 items-center justify-center">
+                  <BrandIcon name={channel.id} class="size-6" />
+                </span>
+                <span class="flex min-w-0 flex-1 flex-col">
+                  <span class="text-ink group-hover/row:text-accent font-semibold">
+                    {t(channelCopy[channel.id].name)}
+                  </span>
+                  <span class="text-ink-muted break-words">{t('contact.viberValue')}</span>
+                </span>
+                <span class="text-primary-700 group-hover/row:text-accent inline-flex shrink-0 items-center gap-1 font-medium">
+                  <span class="sr-only sm:not-sr-only">{t(channelCopy[channel.id].action)}</span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    class="size-4 group-open/viber:rotate-90 rtl:-scale-x-100 rtl:group-open/viber:-rotate-90"
+                  >
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                </span>
+              </summary>
+              <ViberNumbers
+                numbers={channel.numbers}
+                class="border-border border-t p-2 sm:ps-17 sm:pe-3"
+              />
+            </details>
+          </li>
+        ) : (
           <li>
             <a
               href={channel.href}
+              data-app-href={channel.appHref}
               class="group rounded-card border-border bg-surface hover:bg-surface-muted flex items-center gap-4 border p-4 sm:p-5"
             >
               <span class="rounded-control bg-surface-muted text-primary-700 group-hover:bg-surface inline-flex size-11 shrink-0 items-center justify-center">
@@ -58,8 +94,12 @@ const channelCopy: Record<ContactChannelId, { name: UiKey; action: UiKey }> = {
               </span>
             </a>
           </li>
-        ))
-      }
+        ),
+      )}
     </ul>
   </Container>
 </MainLayout>
+
+<script>
+  import '../scripts/app-links';
+</script>

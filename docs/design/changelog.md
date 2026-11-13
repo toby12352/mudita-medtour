@@ -2,6 +2,36 @@
 
 Record every top-layer design change here, newest first: the date, what changed, and why. See [README.md](README.md) for what counts as top-layer.
 
+## 2026-11-13: Article editor at /admin
+
+- Authors publish from `/admin` (Sveltia CMS 0.264.0). Login is GitHub. A save commits Markdown and images; Netlify rebuilds. No database and no Git Gateway. Documented in [content.md](content.md#articles) and the README.
+- An article is one file in `en/` or `my/`. A matching translation is optional, and the language switcher falls back to that language's article list. The production build no longer fails when the other language is missing.
+- `.cursor/rules/core.mdc`, `i18n.mdc`, and `content.mdc` updated.
+
+## 2026-11-13: Hospital strip heading, no pause button
+
+- The hospital strip now opens like the how-it-works section: an `h2` "Featured Hospital Partners" (`home.hospitals.title`), the short primary bar, and a lead sentence about internationally accredited and ISO-certified facilities (`home.hospitals.lead`). The section uses standard `py-16` padding. Replaces the small "Hospitals" label. Documented in [layout.md](layout.md#home-hospital-strip).
+- The pause button and its script are removed at the site owner's request. Hover and keyboard focus still pause the row, and reduced motion still shows a still row. This deliberately falls short of WCAG 2.2.2 for touch users (principle 6).
+- The partner and accreditation wording is the site owner's choice. It is not yet checkable as principle 4 asks; naming the accrediting bodies with verification links is an open item for the hospital pages.
+- `.cursor/rules/ui.mdc` and [principles.md](principles.md) updated.
+
+## 2026-11-13: Home hospital strip
+
+- New home-only component `HospitalStrip` between the welcome banner and how-it-works: a "Hospitals" label and one slow, endless row of seven Thai hospital logos (Piyavate, Phyathai Sriracha, Bangkok Hospital, Samitivej, Vejthani, Praram 9, Kluaynamthai). Documented in [layout.md](layout.md#home-hospital-strip).
+- Principle 1 changed deliberately: this strip is the site's one moving element. It is a CSS marquee, not a slideshow, and it pauses on hover, on focus, and with a pause button (WCAG 2.2.2). Under reduced motion it becomes a still, wrapping row. Rating carousels and decorative motion elsewhere stay out.
+- Labelled "Hospitals", not "partners" or "sponsors", because the page does not yet show a checkable relationship (principle 4).
+- Logos are not links yet. `src/lib/hospitals.ts` has an optional `href` per hospital; adding a URL turns that logo into a link to the official site in a new tab.
+- Logos load eagerly at low priority: lazy loading inside the moving, clipped row let logos slide into view blank.
+- `.cursor/rules/ui.mdc`: new hospital-strip rule, and the carousel ban names this exception.
+
+## 2026-11-13: Real contact details and Viber chooser
+
+- Messenger and Facebook now link to the Mudita Medtour Facebook profile. On phones and tablets they try the Facebook app first (`fb://profile/<id>`, `src/scripts/app-links.ts`) and fall back to the website; desktops open the website.
+- Viber has three numbers (two Myanmar, one Thai). The contact row and the footer icon are native `<details>` that list them through a new shared component, `ViberNumbers`. A dropdown rather than a modal: no JavaScript needed, and it stays clear of principle 5's ban on pop-ups.
+- The Phone row is removed from the contact page, with its icon and strings. LINE is still a placeholder.
+- `contactChannels` in `src/lib/site.ts` is now a union: link channels (`href`, optional `appHref`) and the Viber channel (`numbers`). `socialLinks` is derived from it.
+- `.cursor/rules/content.mdc` and `.cursor/rules/ui.mdc` updated.
+
 ## 2026-11-13: Home banner slogan
 
 - The home welcome panel now opens with the slogan "ကျန်းမာစွာအသက်ကြီးပါ" (`site.slogan` in `src/lib/site.ts`) instead of the site name, which the header logo already shows. Documented in [layout.md](layout.md#home-welcome-banner).

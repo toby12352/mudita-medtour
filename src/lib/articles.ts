@@ -14,7 +14,7 @@ export function getArticleLocale(article: Article): Locale {
   return locale;
 }
 
-/** Slug shared by every translation of the article. */
+/** File name under the locale folder. The same name in both folders links the switcher. */
 export function getArticleSlug(article: Article): string {
   return article.id.split('/').slice(1).join('/');
 }
@@ -23,33 +23,9 @@ export function getArticleUrl(article: Article): string {
   return localizePath(getArticleLocale(article), `/articles/${getArticleSlug(article)}/`);
 }
 
-/** Drafts are included only in development. Production builds fail on untranslated articles. */
+/** Drafts are included only in development. A published article may exist in one language. */
 async function getAllPublishedArticles(): Promise<Article[]> {
-  const articles = await getCollection(
-    'articles',
-    ({ data }) => import.meta.env.DEV || !data.draft,
-  );
-  if (import.meta.env.PROD) assertTranslated(articles);
-  return articles;
-}
-
-function assertTranslated(articles: Article[]): void {
-  const localesBySlug = new Map<string, Set<Locale>>();
-  for (const article of articles) {
-    const slug = getArticleSlug(article);
-    const found = localesBySlug.get(slug) ?? new Set<Locale>();
-    found.add(getArticleLocale(article));
-    localesBySlug.set(slug, found);
-  }
-
-  const missing = [...localesBySlug].flatMap(([slug, found]) =>
-    locales.filter((locale) => !found.has(locale)).map((locale) => `${locale}/${slug}`),
-  );
-  if (missing.length > 0) {
-    throw new Error(
-      `Published articles need a published translation in every locale. Missing: ${missing.join(', ')}`,
-    );
-  }
+  return getCollection('articles', ({ data }) => import.meta.env.DEV || !data.draft);
 }
 
 /** Published articles in one locale, newest first. */

@@ -8,7 +8,7 @@ This is placeholder content. It exists to show that articles in `src/content/art
 
 ## How articles work
 
-Each article has one Markdown or MDX file per language, with the same file name: `en/<file-name>.md` becomes `/articles/<file-name>/`, and `my/<file-name>.md` becomes the Myanmar page at `/my/articles/<file-name>/`. The frontmatter at the top of each file provides the title, description, and publication date.
+Each article is one Markdown or MDX file in one language folder. `en/<file-name>.md` is published at `/articles/<file-name>/`, and `my/<file-name>.md` is published at `/my/articles/<file-name>/`. A file with the same name in the other folder is optional. When it exists, the language switcher opens it. The frontmatter provides the title, description, and publication date.
 
 ## Writing guidelines
 
@@ -16,4 +16,4 @@ Each article has one Markdown or MDX file per language, with the same file name:
 - Keep paragraphs short for mobile readers.
 - Set `draft: true` in the frontmatter to hide an article from production builds.
 
-> Replace or delete this file and its Myanmar translation once real articles are published.
+> Replace or delete this file once real articles are published. Remove the other language's copy as well if you no longer want it.

@@ -8,40 +8,81 @@ export const site = {
 } as const;
 
 export type SocialNetwork = 'line' | 'viber' | 'messenger' | 'facebook';
-export type ContactChannelId = 'phone' | SocialNetwork;
+export type ContactChannelId = SocialNetwork;
 
-export interface ContactChannel {
-  id: ContactChannelId;
-  /** Number or account name shown on the contact page. */
+export interface ViberNumber {
+  /** Key in the `ui` dictionary in `src/i18n/ui.ts`; the country the number belongs to. */
+  countryKey: UiKey;
+  /** Number as shown, with the trunk prefix in brackets. */
   value: string;
-  /** Link that opens the phone dialer or the app. */
+  /** Opens a chat in the Viber app; the number without the trunk prefix. */
   href: string;
 }
 
-// Placeholder details: replace `value` and `href` together for each channel.
-// LINE opens reliably by official account ID (`@...`), not by phone number.
+export interface LinkChannel {
+  id: Exclude<ContactChannelId, 'viber'>;
+  /** Account name shown on the contact page. */
+  value: string;
+  /** Web link; also used on desktops and when the app does not open. */
+  href: string;
+  /** App link tried first on phones and tablets. */
+  appHref?: string;
+}
+
+export interface ViberChannel {
+  id: 'viber';
+  numbers: ViberNumber[];
+}
+
+export type ContactChannel = LinkChannel | ViberChannel;
+
+const facebookProfileId = '100064288861600';
+const facebookProfile = {
+  href: `https://www.facebook.com/profile.php?id=${facebookProfileId}`,
+  appHref: `fb://profile/${facebookProfileId}`,
+};
+
+// LINE is a placeholder: it opens reliably by official account ID (`@...`), not by phone number.
 export const contactChannels: ContactChannel[] = [
-  { id: 'phone', value: '+66 00 000 0000', href: 'tel:+66000000000' },
   { id: 'line', value: '@muditamedtour', href: 'https://line.me/R/ti/p/@muditamedtour' },
-  { id: 'viber', value: '+66 00 000 0000', href: 'viber://chat?number=%2B66000000000' },
-  { id: 'messenger', value: 'muditamedtour', href: 'https://m.me/muditamedtour' },
-  { id: 'facebook', value: 'muditamedtour', href: 'https://www.facebook.com/muditamedtour' },
+  {
+    id: 'viber',
+    numbers: [
+      {
+        countryKey: 'contact.myanmar',
+        value: '+95 (0) 9982164065',
+        href: 'viber://chat?number=%2B959982164065',
+      },
+      {
+        countryKey: 'contact.myanmar',
+        value: '+95 (0) 95401171',
+        href: 'viber://chat?number=%2B9595401171',
+      },
+      {
+        countryKey: 'contact.thailand',
+        value: '+66 (0) 631072505',
+        href: 'viber://chat?number=%2B66631072505',
+      },
+    ],
+  },
+  { id: 'messenger', value: site.name, ...facebookProfile },
+  { id: 'facebook', value: site.name, ...facebookProfile },
 ];
 
-function channelHref(id: ContactChannelId): string {
-  return contactChannels.find((channel) => channel.id === id)?.href ?? '#';
-}
+const socialLabelKeys: Record<SocialNetwork, UiKey> = {
+  line: 'footer.line',
+  viber: 'footer.viber',
+  messenger: 'footer.messenger',
+  facebook: 'footer.facebook',
+};
 
 export interface SocialLink {
-  network: SocialNetwork;
+  channel: ContactChannel;
   /** Key in the `ui` dictionary in `src/i18n/ui.ts`; the accessible name of the icon link. */
   labelKey: UiKey;
-  href: string;
 }
 
-export const socialLinks: SocialLink[] = [
-  { network: 'line', labelKey: 'footer.line', href: channelHref('line') },
-  { network: 'viber', labelKey: 'footer.viber', href: channelHref('viber') },
-  { network: 'messenger', labelKey: 'footer.messenger', href: channelHref('messenger') },
-  { network: 'facebook', labelKey: 'footer.facebook', href: channelHref('facebook') },
-];
+export const socialLinks: SocialLink[] = contactChannels.map((channel) => ({
+  channel,
+  labelKey: socialLabelKeys[channel.id],
+}));

@@ -1,5 +1,5 @@
 ---
-description: Every page, UI string, and article is created in both English and Myanmar
+description: Pages and UI strings exist in English and Myanmar. An article may exist in one language.
 alwaysApply: true
 ---
 
@@ -8,14 +8,18 @@ alwaysApply: true
 The site is bilingual. English (`en`) is at `/`, Myanmar (`my`) at `/my/`. Details: `docs/design/languages.md`.
 
 ## Always create both languages in the same task
-- **Article:** `src/content/articles/en/<slug>.md` and `src/content/articles/my/<slug>.md`, same file name. A production build fails if either is missing.
 - **Page:** markup in a shared view in `src/views/`, plus one route per locale (`src/pages/<path>.astro` and `src/pages/my/<path>.astro`).
 - **UI text:** add the key to both `en` and `my` in `src/i18n/ui.ts`. Never hard-code visible text, `aria-label`, or SEO copy in components.
-- Editing English copy means updating the Myanmar copy too, and the other way round.
+- Editing English interface copy means updating the Myanmar copy too, and the other way round.
+
+## Articles
+- One file: `src/content/articles/en/<slug>.md` or `src/content/articles/my/<slug>.md`. A matching file in the other folder is optional.
+- The same file name links the language switcher when both files exist. Slugs stay English Latin letters.
+- Authors publish from `/admin` (Sveltia CMS). Keep its fields in sync with `src/content.config.ts`.
 
 ## Myanmar quality
 - Real Burmese in Unicode (not Zawgyi). Never leave English, placeholders, or "TODO: translate" in a `my` file.
-- Translate title, description, headings, body, and image alt text. Keep slugs, dates, figures, and URLs identical.
+- A Myanmar article is written in Burmese: title, description, headings, body, and image descriptions. When a second language file is added, keep the slug, dates, figures, and source URLs identical.
 - First use of a medical term: Burmese, then the English term in brackets.
 - Western digits for prices, dates, and figures.
 - If you cannot translate something confidently, translate it as well as you can and tell the user which passages need a fluent reviewer.

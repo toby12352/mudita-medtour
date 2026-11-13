@@ -49,7 +49,7 @@ Details: `docs/design/` (read the topic file you are changing).
 
 ## Footer
 - One slim `bg-primary-700` bar: copyright at the start, then Line, Viber, Messenger, Facebook icon links from `socialLinks` in `src/lib/site.ts`. No logo, no repeated navigation, no other networks.
-- Icon links are `size-11` with `sr-only` names; white, `hover:text-secondary`, `focus-visible:outline-white`. Details: `docs/design/navigation.md#footer`.
+- Icon links are `size-11` with `sr-only` names; white, `hover:text-secondary`, `focus-visible:outline-white`. Viber's icon opens a `<details>` list of numbers (`ViberNumbers`) above it. Details: `docs/design/navigation.md#footer`.
 
 ## Accessibility
 - WCAG 2.2 AA contrast; never remove the global `:focus-visible` outline.
@@ -62,5 +62,10 @@ Details: `docs/design/` (read the topic file you are changing).
 ## Home how-it-works
 - `HowItWorks` (`src/components/home/HowItWorks.astro`) is home-only: an `<ol>` of six steps, not cards or links. One column with a dashed rail below `lg`, two rows of three from `lg`; never six in one row. Copy lives under `home.steps.*`. Details: `docs/design/layout.md#home-how-it-works-section`.
 
+## Home hospital strip
+- `HospitalStrip` (`src/components/home/HospitalStrip.astro`) is home-only, between the banner and `HowItWorks`: the same header as `HowItWorks` (centered `h2` `home.hospitals.title`, `bg-primary-700` bar, `text-lg` lead `home.hospitals.lead`) and one full-width row of logos drifting slowly (48s loop, CSS only, list rendered twice with the copy `aria-hidden`). It is the site's only moving element; do not copy it to other pages or add arrows, dots, or slides.
+- It pauses on hover and keyboard focus; there is no pause button, by the site owner's choice. Under reduced motion it is a still, wrapping row. Logos load `eager` with `fetchpriority="low"` so they are ready before they slide in.
+- Hospitals live in `src/lib/hospitals.ts` (name, trimmed logo from `assets/hospitals/`, optional `href`). No `href` means an unlinked image, never `href="#"`; with one, the logo links to the official site in a new tab. Alt is the English hospital name. Accreditation claims in the lead still need a named body and a verification link once hospital pages exist. Details: `docs/design/layout.md#home-hospital-strip`.
+
 ## Avoid
-Hero search boxes, carousels, sticky inquiry bars, pop-ups, decorative animation, photos behind hero text, stock photos as real people or facilities, ads beside clinical content.
+Hero search boxes, carousels (the home hospital strip is the one exception), sticky inquiry bars, pop-ups, decorative animation, photos behind hero text, stock photos as real people or facilities, ads beside clinical content.

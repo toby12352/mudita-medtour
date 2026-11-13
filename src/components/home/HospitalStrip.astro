@@ -1,0 +1,105 @@
+---
+/*
+ * Home-only hospital logo strip: one row drifting slowly toward the inline start, full width.
+ * The list renders twice and the track moves by half its width, so the loop has no seam.
+ * Hover and keyboard focus stop it. Reduced motion shows one still,
+ * wrapping row instead, because the global rule would only freeze the track mid-way.
+ * Logos load eagerly at low priority: lazy loading inside the clipped track starts too late,
+ * so logos slid into view blank.
+ */
+import { Image } from 'astro:assets';
+import Container from '../ui/Container.astro';
+import { getLocale, useTranslations } from '../../i18n/ui';
+import { hospitals } from '../../lib/hospitals';
+
+const locale = getLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+
+const copies = [false, true];
+---
+
+<section aria-labelledby="hospitals-heading" class="bg-surface border-border border-b py-16">
+  <Container class="text-center">
+    <h2 id="hospitals-heading">{t('home.hospitals.title')}</h2>
+    <div class="bg-primary-700 mx-auto mt-4 h-0.5 w-12" aria-hidden="true"></div>
+    <p class="text-ink-muted mx-auto mt-6 max-w-2xl text-lg">{t('home.hospitals.lead')}</p>
+  </Container>
+
+  <div class="viewport mt-12 overflow-hidden">
+    <div class="track flex w-max motion-reduce:w-auto">
+      {copies.map((isCopy) => (
+        <ul
+          class:list={[
+            'flex shrink-0 items-center gap-x-16 pe-16',
+            'motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-x-8 motion-reduce:gap-y-6 motion-reduce:ps-4 motion-reduce:pe-4',
+            isCopy && 'motion-reduce:hidden',
+          ]}
+          aria-hidden={isCopy ? 'true' : undefined}
+        >
+          {hospitals.map((hospital) => {
+            const Tag = hospital.href ? 'a' : 'div';
+            const linkProps = hospital.href
+              ? {
+                  href: hospital.href,
+                  target: '_blank',
+                  rel: 'noopener noreferrer',
+                  tabindex: isCopy ? -1 : undefined,
+                }
+              : {};
+            return (
+              <li class="shrink-0">
+                <Tag {...linkProps} class="rounded-control flex min-h-11 items-center">
+                  <Image
+                    src={hospital.logo}
+                    alt={hospital.name}
+                    height={48}
+                    densities={[1, 2]}
+                    loading="eager"
+                    fetchpriority="low"
+                    class="h-10 w-auto sm:h-12"
+                  />
+                </Tag>
+              </li>
+            );
+          })}
+        </ul>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .viewport {
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+
+  .track {
+    --marquee-shift: -50%;
+    animation: hospital-marquee 48s linear infinite;
+  }
+
+  .track:dir(rtl) {
+    --marquee-shift: 50%;
+  }
+
+  .viewport:hover .track,
+  .viewport:focus-within .track {
+    animation-play-state: paused;
+  }
+
+  @keyframes hospital-marquee {
+    to {
+      transform: translateX(var(--marquee-shift));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .viewport {
+      mask-image: none;
+    }
+
+    .track {
+      animation: none;
+    }
+  }
+</style>

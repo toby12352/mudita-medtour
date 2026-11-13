@@ -2,9 +2,9 @@
 
 Static, content-driven website built with [Astro](https://astro.build), TypeScript, and Tailwind CSS, deployed to Netlify.
 
-The site is fully pre-rendered at build time. There is no backend, database, API server, or user accounts. Articles are Markdown/MDX files in the repository, which a Git-based CMS (Decap CMS) can manage later.
+The site is fully pre-rendered at build time. There is no backend, database, API server, or user accounts. Articles are Markdown files. Authors publish them at `/admin` with Sveltia CMS, which commits to GitHub.
 
-The site is bilingual: English at `/` and Myanmar (Burmese) at `/my/`. Every page and article exists in both languages, and a switcher in the header links each page to its translation. See [`docs/design/languages.md`](docs/design/languages.md).
+The site is bilingual: English at `/` and Myanmar (Burmese) at `/my/`. Pages and interface text exist in both languages. An article is published in the language it was written in. A switcher in the header links a page to its translation, or an article list when that article has no pair. See [`docs/design/languages.md`](docs/design/languages.md).
 
 ## Tech stack
 
@@ -67,8 +67,8 @@ src/
     layout/                 Site chrome (Header, Footer, LanguageSwitcher)
     ui/                     Generic building blocks (Button, Container)
   content/
-    articles/en/            English article Markdown/MDX files
-    articles/my/            Myanmar translations, same file names
+    articles/en/            English articles, one Markdown file per post
+    articles/my/            Myanmar articles, one Markdown file per post
   content.config.ts         Content collection schemas
   i18n/ui.ts                Locales, interface translations, locale URL helpers
   layouts/
@@ -83,11 +83,14 @@ src/
   styles/global.css         Tailwind import, design tokens, base styles
   types/                    Shared TypeScript types
   utils/                    Small pure helpers
+public/
+  admin/                    Sveltia CMS at /admin (index.html and config.yml)
+  images/articles/          Photos uploaded with articles
 astro.config.mjs
 netlify.toml
 ```
 
-Add folders such as `public/images/` or new `src/pages/` sections when real content needs them.
+Add a `src/pages/` section when a new part of the site needs one. Article photos go in `public/images/articles/`.
 
 ## Conventions
 
@@ -108,16 +111,14 @@ Design rules for typography, color, buttons, navigation, cards, layout, and cont
 
 ## Articles
 
-Articles live in `src/content/articles/` as `.md` or `.mdx` files, one folder per language. The file name becomes the URL and pairs the translations:
+Articles live in `src/content/articles/` as `.md` or `.mdx` files, one folder per language. The file name is the URL. A post needs only the folder for the language it was written in. The same file name in both folders is optional and links the language switcher.
 
 | File                    | URL                             |
 | ----------------------- | ------------------------------- |
 | `en/hip-replacement.md` | `/articles/hip-replacement/`    |
 | `my/hip-replacement.md` | `/my/articles/hip-replacement/` |
 
-Write both files together. A production build fails if a published article has no published translation.
-
-Required frontmatter (translate `title` and `description`; keep dates and `draft` the same in both files):
+Required frontmatter (`title` and `description` are in the article's language):
 
 ```yaml
 ---
@@ -129,16 +130,26 @@ draft: false # optional; drafts are hidden in production builds
 ---
 ```
 
-The schema in `src/content.config.ts` validates every file, and the build fails on invalid frontmatter. Keep article files directly inside `en/` and `my/`.
+The schema in `src/content.config.ts` validates every file, and the build fails on invalid frontmatter. Keep article files directly inside `en/` and `my/`. Slugs stay lowercase English letters, numbers, and hyphens.
 
-### Future CMS integration
+### Publishing at /admin
 
-A Git-based CMS (Decap CMS or Sveltia CMS) can be added later at `/admin` without restructuring. Every save is a commit to GitHub, and the commit triggers a normal Netlify deploy. There is no database.
+`/admin` is [Sveltia CMS](https://sveltiacms.app/) (`public/admin/index.html` and `public/admin/config.yml`). The author signs in with GitHub, chooses English articles or Myanmar articles, and writes one post. Images dropped into the body are stored in `public/images/articles`. Every save is a commit. There is no database.
 
-- Add `public/admin/index.html` and `public/admin/config.yml`.
-- Point an `articles` collection at `src/content/articles` with fields matching the schema above, using the CMS `i18n` setting (`structure: multiple_folders`, locales `en` and `my`) so editors fill in both languages.
-- Store uploaded media under `public/images/articles`.
-- Use the `github` backend, with editors signing in through GitHub OAuth. Do not use the `git-gateway` backend: Netlify has deprecated Git Gateway for new sites.
+- **Save** opens a pull request and a Netlify Deploy Preview. The live site is unchanged.
+- **Publish** merges that pull request into `main`, which triggers one production deploy.
+- **Hide on the website** sets `draft: true`. The file can be on `main` and still be omitted from the production site.
+
+The editor script is pinned to Sveltia CMS 0.264.0. Change that version on purpose. Do not use the `git-gateway` backend: Netlify has deprecated Git Gateway for new sites.
+
+Before the first login, once, outside this repository:
+
+1. On GitHub, register an OAuth app. Set the authorization callback URL to `https://api.netlify.com/auth/done`. Copy the client id and generate a client secret. Do not commit either value.
+2. On the Netlify site, open **Project configuration → Security → OAuth**, install the GitHub provider, and paste the client id and secret. Leave Git Gateway and Identity off.
+3. Invite the author to [toby12352/mudita-medtour](https://github.com/toby12352/mudita-medtour) with **Write** access, and have them accept the invite. Keep the repository public so their commits deploy on Netlify's free plan. Do not require pull-request reviews, or **Publish** cannot merge.
+4. On a credit-based free plan, each production deploy costs 15 credits of the 300 included each month. Deploy previews cost nothing. When the credits run out, the site pauses until the next month.
+
+The author then opens `https://<site>/admin` and chooses **Login with GitHub**. They do not need a Netlify account.
 
 ## Deployment (Netlify)
 

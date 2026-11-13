@@ -6,7 +6,9 @@ Content follows predictable structures so visitors know where to look on every p
 
 Articles live in `src/content/articles/` and are validated by the schema in `src/content.config.ts`.
 
-Every article is written in English and Myanmar, as two files with the same name: `en/<slug>.md` and `my/<slug>.md`. Both share `pubDate`, `updatedDate`, and `draft`; everything visible is translated. A production build fails if a published article is missing its translation. See [languages.md](languages.md).
+An article is one file in the language it was written in: `en/<slug>.md` or `my/<slug>.md`. A second file with the same name is optional. When both exist, the language switcher opens the pair. The slug stays English Latin letters. See [languages.md](languages.md).
+
+Authors add posts at `/admin`. That page is Sveltia CMS: GitHub login, then a form for the fields below and a Markdown body. Images dropped into the body are stored in `public/images/articles` and linked as `/images/articles/<file>`. They are not run through `astro:assets`, so the author resizes a photo before uploading. `/admin` is not in the menu and is marked `noindex`.
 
 Required in every article:
 
@@ -41,10 +43,11 @@ Add these as the site grows. Each one should be visible, not buried:
 `/contact/` and `/my/contact/` (`src/views/ContactView.astro`) list the ways to reach the team. There is no form and no backend.
 
 - Reading-width `Container`, `py-12 sm:py-16`: the `h1`, one lead sentence, then a single-column `<ul>` with a translated `aria-label`.
-- Order: Phone, LINE, Viber, Messenger, Facebook. Each item is one link covering the whole row (it has no other control): a `size-11` `bg-surface-muted` tile with a `BrandIcon` in `text-primary-700`, the channel name, the number or account name, and a verb ("Call", "Chat on LINE"). Below `sm` the verb is `sr-only` and only a chevron shows. Rows are `rounded-card border border-border`, turning `bg-surface-muted` with an accent name on hover.
-- Links open the app directly: `tel:` for phone, `line.me/R/ti/p/@id`, `viber://chat?number=`, `m.me/`, and the Facebook page URL. Same tab, so the phone can hand the link to the app.
+- Order: LINE, Viber, Messenger, Facebook. There is no phone row. Each item is one link covering the whole row (it has no other control): a `size-11` `bg-surface-muted` tile with a `BrandIcon` in `text-primary-700`, the channel name, the account name, and a verb ("Chat on LINE"). Below `sm` the verb is `sr-only` and only a chevron shows. Rows are `rounded-card border border-border`, turning `bg-surface-muted` with an accent name on hover.
+- Viber has several numbers, so its row is a native `<details>` with the same look: the summary reads "Myanmar and Thailand" and "Choose a number", and its chevron turns down when open. The open row lists each number with its country, from `ViberNumbers` (`src/components/common/ViberNumbers.astro`), which the footer shares. Not a modal: it works without JavaScript and opens only on request.
+- Links open the app: `line.me/R/ti/p/@id` and `viber://chat?number=` directly. Messenger and Facebook link to the Facebook profile; on phones and tablets (touch, below `lg`) `src/scripts/app-links.ts` first tries the `appHref` (`fb://profile/<id>`) and falls back to the profile page after 1.5 seconds if the app does not open. Same tab, so the phone can hand the link to the app.
 - Brand icons stay in the site palette, not each app's brand color. No primary button, floating chat widget, or sticky bar (see [principles.md](principles.md)).
-- Numbers, account names, and URLs live in `contactChannels` in `src/lib/site.ts`; the footer social icons read the same list. Replace `value` and `href` together. LINE needs an official account ID (`@...`), not a phone number.
+- Numbers, account names, and URLs live in `contactChannels` in `src/lib/site.ts`; the footer social icons read the same list. Replace `value` and `href` together. Show Viber numbers as given, with the trunk prefix in brackets (`+95 (0) 9…`); the `viber://` link drops the `(0)`. LINE needs an official account ID (`@...`), not a phone number, and is still a placeholder.
 - Add a "what happens next" note (who replies, how, and how soon) once response times can be promised.
 
 ## Treatment guide template (future)

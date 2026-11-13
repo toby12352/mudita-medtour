@@ -1,0 +1,88 @@
+# Article editor for /admin. Field names must match src/content.config.ts.
+# No secrets belong in this file. Login uses Netlify's GitHub OAuth provider.
+# Do not switch the backend to git-gateway.
+
+backend:
+  name: github
+  repo: toby12352/mudita-medtour
+  branch: main
+  auth_methods: [oauth]
+  # GitHub login only. An access token in the browser is a repo password.
+
+publish_mode:
+  type: editorial_workflow
+  stages: [draft, pending_publish]
+  direct_publish: true
+  allow_incomplete_drafts: false
+
+media_folder: /public/images/articles
+public_folder: /images/articles
+
+slug:
+  encoding: ascii
+  sanitize_replacement: "-"
+  lowercase: true
+
+collections:
+  - name: articles_en
+    label: English articles
+    label_singular: English article
+    folder: /src/content/articles/en
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    preview_path: /articles/{{slug}}/
+    slug: &article_slug
+      editable: [create]
+      hint: >-
+        Lowercase English words with hyphens, such as hip-replacement.
+        This becomes the web address and cannot be changed after the first save.
+      pattern:
+        - "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        - Use lowercase English letters, numbers, and hyphens.
+    fields: &article_fields
+      - label: Title
+        name: title
+        widget: string
+        required: true
+      - label: Description
+        name: description
+        widget: text
+        required: true
+        hint: One or two sentences for the article list and search results.
+      - label: Publication date
+        name: pubDate
+        widget: datetime
+        type: date
+        required: true
+      - label: Updated date
+        name: updatedDate
+        widget: datetime
+        type: date
+        required: false
+        hint: Set this when the article is materially revised.
+      - label: Hide on the website
+        name: draft
+        widget: boolean
+        default: false
+        required: false
+        hint: The file stays in the repository, and the live site omits it.
+      - label: Body
+        name: body
+        widget: markdown
+        required: true
+        hint: >-
+          Drop a photo into the text and describe it. Resize the photo before
+          uploading, because large files use the site's bandwidth. Do not start
+          with a heading; the title is already the page heading.
+
+  - name: articles_my
+    label: Myanmar articles
+    label_singular: Myanmar article
+    folder: /src/content/articles/my
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    preview_path: /my/articles/{{slug}}/
+    slug: *article_slug
+    fields: *article_fields
